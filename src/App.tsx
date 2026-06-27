@@ -11,7 +11,6 @@ import { ScatterPlot } from './components/ScatterPlot'
 import { YearDetails } from './components/YearDetails'
 import { ForecastPanel } from './components/ForecastPanel'
 import { InfoModal } from './components/InfoModal'
-import { STRESS_CATEGORIES } from './utils/categories'
 
 export default function App() {
   const { data, loading, error } = useWeatherData('/peachtree-start-conditions.csv')
