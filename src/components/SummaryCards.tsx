@@ -5,6 +5,7 @@ import {
   BeakerIcon,
   BoltIcon,
   TrophyIcon,
+  ChartBarIcon,
 } from '@heroicons/react/24/outline'
 import { type WeatherRecord } from '../types'
 import { MetricCard } from './MetricCard'
@@ -17,11 +18,13 @@ interface Props {
 
 export function SummaryCards({ data, selectedYear, onSelectYear }: Props) {
   const cards = useMemo(() => {
-    if (!data.length) return []
+    if (!data.length) return { extremes: [], averages: [] }
     const maxBy = <K extends keyof WeatherRecord>(field: K) =>
       data.reduce((best, r) => ((r[field] as number) > (best[field] as number) ? r : best))
     const minBy = <K extends keyof WeatherRecord>(field: K) =>
       data.reduce((best, r) => ((r[field] as number) < (best[field] as number) ? r : best))
+    const avg = (field: keyof WeatherRecord) =>
+      data.reduce((s, r) => s + (r[field] as number), 0) / data.length
 
     const hottest = maxBy('tempF')
     const coolest = minBy('tempF')
@@ -29,7 +32,17 @@ export function SummaryCards({ data, selectedYear, onSelectYear }: Props) {
     const highestHI = maxBy('heatIndexF')
     const highestStress = maxBy('runnerStressScore')
 
-    return [
+    const avgTemp = avg('tempF')
+    const avgDew = avg('dewPointF')
+    const avgHI = avg('heatIndexF')
+
+    // Year closest to each average
+    const closestTo = (field: keyof WeatherRecord, target: number) =>
+      data.reduce((best, r) =>
+        Math.abs((r[field] as number) - target) < Math.abs((best[field] as number) - target) ? r : best
+      )
+
+    const extremes = [
       {
         title: 'Hottest Start',
         year: hottest.year,
@@ -74,32 +87,88 @@ export function SummaryCards({ data, selectedYear, onSelectYear }: Props) {
         title: 'Highest Stress Score',
         year: highestStress.year,
         value: highestStress.runnerStressScore.toFixed(1),
-        subtitle: `${highestStress.tempF}°F • Dew ${highestStress.dewPointF}°F`,
+        subtitle: `${highestStress.tempF}°F · Dew ${highestStress.dewPointF}°F`,
         icon: <TrophyIcon className="h-5 w-5" />,
         accentColor: '#a855f7',
         stressScore: highestStress.runnerStressScore,
         record: highestStress,
       },
     ]
+
+    const averages = [
+      {
+        title: 'Avg Temperature',
+        year: closestTo('tempF', avgTemp).year,
+        value: `${avgTemp.toFixed(1)}°F`,
+        subtitle: `Typical race-morning temp`,
+        icon: <ChartBarIcon className="h-5 w-5" />,
+        accentColor: '#f97316',
+        stressScore: undefined,
+        record: closestTo('tempF', avgTemp),
+      },
+      {
+        title: 'Avg Dew Point',
+        year: closestTo('dewPointF', avgDew).year,
+        value: `${avgDew.toFixed(1)}°F`,
+        subtitle: `Typical humidity feel`,
+        icon: <ChartBarIcon className="h-5 w-5" />,
+        accentColor: '#3b82f6',
+        stressScore: undefined,
+        record: closestTo('dewPointF', avgDew),
+      },
+      {
+        title: 'Avg Heat Index',
+        year: closestTo('heatIndexF', avgHI).year,
+        value: `${avgHI.toFixed(1)}°F`,
+        subtitle: `Typical perceived temp`,
+        icon: <ChartBarIcon className="h-5 w-5" />,
+        accentColor: '#ef4444',
+        stressScore: undefined,
+        record: closestTo('heatIndexF', avgHI),
+      },
+    ]
+
+    return { extremes, averages }
   }, [data])
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-      {cards.map((card, i) => (
-        <MetricCard
-          key={card.title}
-          title={card.title}
-          year={card.year}
-          value={card.value}
-          subtitle={card.subtitle}
-          icon={card.icon}
-          accentColor={card.accentColor}
-          stressScore={card.stressScore}
-          selected={selectedYear === card.year}
-          onClick={() => onSelectYear(card.year)}
-          delay={i * 0.07}
-        />
-      ))}
+    <div className="space-y-4">
+      {/* Extremes row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {cards.extremes.map((card, i) => (
+          <MetricCard
+            key={card.title}
+            title={card.title}
+            year={card.year}
+            value={card.value}
+            subtitle={card.subtitle}
+            icon={card.icon}
+            accentColor={card.accentColor}
+            stressScore={card.stressScore}
+            selected={selectedYear === card.year}
+            onClick={() => onSelectYear(card.year)}
+            delay={i * 0.07}
+          />
+        ))}
+      </div>
+
+      {/* Averages row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {cards.averages.map((card, i) => (
+          <MetricCard
+            key={card.title}
+            title={card.title}
+            year={card.year}
+            value={card.value}
+            subtitle={card.subtitle}
+            icon={card.icon}
+            accentColor={card.accentColor}
+            selected={selectedYear === card.year}
+            onClick={() => onSelectYear(card.year)}
+            delay={0.35 + i * 0.07}
+          />
+        ))}
+      </div>
     </div>
   )
 }

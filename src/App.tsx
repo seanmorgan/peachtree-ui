@@ -90,24 +90,26 @@ export default function App() {
       {/* ── Header ── */}
       <header className="header-gradient border-b border-peachtree-700/40 sticky top-0 z-40 shadow-lg shadow-peachtree-900/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🏃</span>
+          <div className="flex h-20 items-center justify-between gap-4">
+            {/* Branding */}
+            <div className="flex items-center gap-4">
+              <span className="text-4xl leading-none select-none">🏃</span>
               <div>
-                <h1 className="text-sm font-bold text-white leading-tight tracking-wide">
+                <h1 className="text-xl font-extrabold text-white tracking-tight leading-tight">
                   Peachtree Road Race
                 </h1>
-                <p className="text-xs text-peachtree-200/80">
-                  Weather History · Atlanta, GA · July 4th · 1982–2025
+                <p className="text-sm font-semibold text-peachtree-200 mt-0.5">
+                  Race-Start Weather History &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; July 4th &nbsp;·&nbsp; 1982–2025
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Category legend */}
-              <div className="hidden md:flex items-center gap-3">
+            {/* Right side */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {/* Category legend – hidden on small screens */}
+              <div className="hidden lg:flex items-center gap-3">
                 {STRESS_CATEGORIES.map(c => (
-                  <span key={c.label} className="flex items-center gap-1 text-xs text-white/70">
+                  <span key={c.label} className="flex items-center gap-1.5 text-xs font-medium text-white/70">
                     <span className="h-2 w-2 rounded-full" style={{ background: c.color }} />
                     {c.label}
                   </span>
