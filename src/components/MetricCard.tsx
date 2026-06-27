@@ -34,12 +34,12 @@ export function MetricCard({
       transition={{ duration: 0.4, delay, ease: 'easeOut' }}
       onClick={onClick}
       className={cn(
-        'relative overflow-hidden rounded-2xl border bg-white dark:bg-slate-900 p-5',
+        'relative overflow-hidden rounded-2xl border bg-white dark:bg-navy-900 p-5',
         'transition-all duration-200',
         onClick && 'cursor-pointer hover:scale-[1.02] active:scale-[0.99]',
         selected
-          ? 'ring-2 ring-indigo-500 border-indigo-300 dark:border-indigo-600 shadow-lg shadow-indigo-500/10'
-          : 'border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md',
+          ? 'ring-2 ring-peachtree-500 border-peachtree-300 dark:border-peachtree-700 shadow-lg shadow-peachtree-500/10'
+          : 'border-slate-200 dark:border-navy-700 shadow-sm hover:shadow-md',
       )}
     >
       {/* Accent gradient blob */}

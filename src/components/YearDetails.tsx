@@ -33,10 +33,10 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.25 }}
-      className="rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm"
+      className="rounded-2xl border border-slate-200 bg-white dark:border-navy-800 dark:bg-navy-900 shadow-sm"
     >
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+      <div className="flex items-center justify-between gap-4 border-b border-slate-100 dark:border-navy-800 px-5 py-4">
         <div>
           <h2 className="text-base font-semibold text-slate-900 dark:text-white">Year Details</h2>
           <p className="text-xs text-slate-400 dark:text-slate-500">
@@ -46,7 +46,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
         <select
           value={selectedYear ?? ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onSelectYear(Number(e.target.value))}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-peachtree-500 dark:border-navy-700 dark:bg-navy-800 dark:text-slate-300 dark:hover:border-navy-600"
         >
           <option value="" disabled>Select year…</option>
           {years.map(y => (
@@ -86,7 +86,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
               return (
                 <div
                   key={m.key}
-                  className="rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-3"
+                  className="rounded-xl border border-slate-100 dark:border-navy-700 bg-slate-50 dark:bg-navy-800/50 p-3"
                 >
                   <div className="flex items-center gap-1.5 mb-1">
                     <span
@@ -108,7 +108,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
           </div>
 
           {/* Additional details */}
-          <div className="rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-4">
+            className="rounded-xl border border-slate-100 dark:border-navy-700 bg-slate-50 dark:bg-navy-800/50 p-4"
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
               More Details
             </p>
@@ -140,7 +140,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
               href={record.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
+              className="inline-flex items-center gap-1 text-xs text-peachtree-500 hover:text-peachtree-600 dark:text-peachtree-400 dark:hover:text-peachtree-300 transition-colors"
             >
               View source data ↗
             </a>

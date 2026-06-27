@@ -25,7 +25,7 @@ export function ChartControls({ activeMetrics, onToggleMetric, onDownload }: Pro
               'transition-all duration-150 hover:scale-[1.03] active:scale-95',
               active
                 ? 'border-transparent text-white shadow-sm'
-                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600',
+                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 dark:border-navy-700 dark:bg-navy-800 dark:text-slate-400 dark:hover:border-navy-600',
             )}
             style={active ? { background: m.color } : undefined}
           >
@@ -41,7 +41,7 @@ export function ChartControls({ activeMetrics, onToggleMetric, onDownload }: Pro
       {onDownload && (
         <button
           onClick={onDownload}
-          className="ml-auto flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500 transition-all hover:border-slate-300 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300"
+          className="ml-auto flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500 transition-all hover:border-slate-300 hover:text-slate-700 dark:border-navy-700 dark:bg-navy-800 dark:text-slate-400 dark:hover:border-navy-600 dark:hover:text-slate-300"
         >
           <ArrowDownTrayIcon className="h-3.5 w-3.5" />
           PNG

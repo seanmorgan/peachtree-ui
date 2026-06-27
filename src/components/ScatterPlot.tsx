@@ -21,7 +21,7 @@ function ScatterTooltip({ active, payload }: TooltipProps<number, string>) {
   const cat = getStressCategory(d.runnerStressScore ?? 0)
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/95 min-w-[160px]">
+    <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-navy-700 dark:bg-navy-900/95 min-w-[160px]">
       <div className="mb-2 flex items-center justify-between gap-3">
         <span className="text-sm font-bold text-slate-900 dark:text-white">
           {d.isForecast ? '📍 Forecast' : `${d.year}`}
@@ -55,7 +55,7 @@ function ScatterTooltip({ active, payload }: TooltipProps<number, string>) {
           <span className="font-semibold text-slate-900 dark:text-white">{d.runnerStressScore?.toFixed(1)}</span>
         </div>
         {d.condition && (
-          <div className="mt-1 border-t border-slate-100 pt-1 text-slate-400 dark:border-slate-700 dark:text-slate-500">
+          <div className="mt-1 border-t border-slate-100 pt-1 text-slate-400 dark:border-navy-700 dark:text-slate-500">
             {getConditionEmoji(d.condition)} {d.condition}
           </div>
         )}
@@ -143,9 +143,9 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm"
+      className="rounded-2xl border border-slate-200 bg-white dark:border-navy-800 dark:bg-navy-900 shadow-sm"
     >
-      <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+      <div className="border-b border-slate-100 dark:border-navy-800 px-5 py-4">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Temperature vs. Dew Point
         </h2>

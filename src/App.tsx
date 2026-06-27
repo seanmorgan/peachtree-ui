@@ -64,7 +64,7 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen bg-slate-50 dark:bg-slate-950"
+      className="min-h-screen bg-slate-50 dark:bg-navy-950"
       onDragEnter={handleDragEnter}
       onDragOver={e => e.preventDefault()}
       onDragLeave={handleDragLeave}
@@ -77,27 +77,27 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-indigo-500/10 backdrop-blur-sm"
-            style={{ border: '3px dashed #6366f1' }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-peachtree-500/10 backdrop-blur-sm"
+            style={{ border: '3px dashed #cb333b' }}
           >
-            <CloudArrowUpIcon className="h-16 w-16 text-indigo-500 mb-3" />
-            <p className="text-xl font-bold text-indigo-600 dark:text-indigo-400">Drop CSV to reload</p>
+            <CloudArrowUpIcon className="h-16 w-16 text-peachtree-500 mb-3" />
+            <p className="text-xl font-bold text-peachtree-600 dark:text-peachtree-400">Drop CSV to reload</p>
             <p className="text-sm text-indigo-400 mt-1">Replaces current dataset</p>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* ── Header ── */}
-      <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+      <header className="header-gradient border-b border-peachtree-700/40 sticky top-0 z-40 shadow-lg shadow-peachtree-900/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-2xl">🏃</span>
               <div>
-                <h1 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                <h1 className="text-sm font-bold text-white leading-tight tracking-wide">
                   Peachtree Road Race
                 </h1>
-                <p className="text-xs text-slate-400 dark:text-slate-500">
+                <p className="text-xs text-peachtree-200/80">
                   Weather History · Atlanta, GA · July 4th · 1982–2025
                 </p>
               </div>
@@ -107,7 +107,7 @@ export default function App() {
               {/* Category legend */}
               <div className="hidden md:flex items-center gap-3">
                 {STRESS_CATEGORIES.map(c => (
-                  <span key={c.label} className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
+                  <span key={c.label} className="flex items-center gap-1 text-xs text-white/70">
                     <span className="h-2 w-2 rounded-full" style={{ background: c.color }} />
                     {c.label}
                   </span>
@@ -117,7 +117,7 @@ export default function App() {
               {/* Dark mode toggle */}
               <button
                 onClick={toggleDark}
-                className="rounded-lg border border-slate-200 dark:border-slate-700 p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="rounded-lg border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
                 aria-label="Toggle dark mode"
               >
                 {isDark ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
@@ -135,7 +135,7 @@ export default function App() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}
-              className="h-10 w-10 rounded-full border-4 border-indigo-500 border-t-transparent"
+              className="h-10 w-10 rounded-full border-4 border-peachtree-500 border-t-transparent"
             />
             <p className="text-sm text-slate-400 dark:text-slate-500">Loading weather history…</p>
           </div>
@@ -222,7 +222,7 @@ export default function App() {
             <footer className="border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-400 dark:text-slate-600">
               <p>
                 Data sourced from{' '}
-                <a href="https://www.wunderground.com" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-500 transition-colors">
+                <a href="https://www.wunderground.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
                   Weather Underground
                 </a>{' '}
                 · Fulton County Airport (KFTY) · Drop a new CSV anywhere on the page to reload

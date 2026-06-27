@@ -18,8 +18,8 @@ interface Props {
 function SortIcon({ field, sortField, sortDir }: { field: SortField; sortField: SortField; sortDir: SortDir }) {
   if (field !== sortField) return <ChevronUpIcon className="h-3 w-3 opacity-20" />
   return sortDir === 'asc'
-    ? <ChevronUpIcon className="h-3 w-3 text-indigo-500" />
-    : <ChevronDownIcon className="h-3 w-3 text-indigo-500" />
+    ? <ChevronUpIcon className="h-3 w-3 text-peachtree-500" />
+    : <ChevronDownIcon className="h-3 w-3 text-peachtree-500" />
 }
 
 const COLS: Array<{ field: SortField; label: string; align?: string }> = [
@@ -74,9 +74,9 @@ export function RankingsTable({ data, selectedYear, onSelectYear, forecast, show
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15 }}
-      className="rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm overflow-hidden"
+      className="rounded-2xl border border-slate-200 bg-white dark:border-navy-800 dark:bg-navy-900 shadow-sm overflow-hidden"
     >
-      <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+      <div className="border-b border-slate-100 dark:border-navy-800 px-5 py-4">
         <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Historical Rankings
         </h2>
@@ -88,7 +88,7 @@ export function RankingsTable({ data, selectedYear, onSelectYear, forecast, show
       <div className="overflow-x-auto">
         <table className="w-full min-w-[700px] text-sm">
           <thead>
-            <tr className="border-b border-slate-100 dark:border-slate-800">
+            <tr className="border-b border-slate-100 dark:border-navy-800">
               {COLS.map(col => (
                 <th
                   key={col.field}
@@ -141,7 +141,7 @@ export function RankingsTable({ data, selectedYear, onSelectYear, forecast, show
                   className={cn(
                     'cursor-pointer transition-colors duration-100',
                     isSelected
-                      ? 'bg-indigo-50 dark:bg-indigo-500/10 ring-1 ring-inset ring-indigo-200 dark:ring-indigo-500/30'
+                      ? 'bg-peachtree-50 dark:bg-peachtree-500/10 ring-1 ring-inset ring-peachtree-200 dark:ring-peachtree-500/30'
                       : 'hover:bg-slate-50 dark:hover:bg-slate-800/50',
                   )}
                 >
@@ -151,7 +151,7 @@ export function RankingsTable({ data, selectedYear, onSelectYear, forecast, show
                     {row.rank === 1 ? '🥇' : row.rank === 2 ? '🥈' : row.rank === 3 ? '🥉' : `#${row.rank}`}
                   </td>
                   <td className={cn('px-4 py-2.5 text-right tabular-nums font-semibold',
-                    isSelected ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-700 dark:text-slate-300'
+                    isSelected ? 'text-peachtree-600 dark:text-peachtree-400' : 'text-slate-700 dark:text-slate-300'
                   )}>
                     {row.year}
                   </td>
