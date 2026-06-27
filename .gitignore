@@ -1,6 +1,15 @@
+# Dependencies
+node_modules/
+dist/
+
 # JetBrains IDE
 .idea/
 
 # OS
 .DS_Store
+
+# Vite
+*.local
+.env
+.env.*
 
