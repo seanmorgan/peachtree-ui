@@ -21,19 +21,33 @@ export function InfoModal({ open, onClose }: Props) {
             className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
           />
 
-          {/* Panel */}
+          {/* Outer positioner:
+              mobile  → align to bottom edge (bottom-sheet)
+              sm+     → center in viewport */}
           <motion.div
             key="panel"
-            initial={{ opacity: 0, y: 24, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.97 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none
+                       sm:inset-0 sm:items-center sm:p-4"
           >
-            <div className="pointer-events-auto w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-navy-700 dark:bg-navy-900">
+            {/* Panel: bottom-sheet on mobile, floating card on sm+ */}
+            <div className="
+              pointer-events-auto w-full flex flex-col
+              max-h-[88dvh] sm:max-h-[min(90vh,680px)] sm:max-w-lg
+              rounded-t-2xl sm:rounded-2xl
+              border border-slate-200 bg-white shadow-2xl
+              dark:border-navy-700 dark:bg-navy-900
+            ">
+              {/* Drag handle (mobile only) */}
+              <div className="flex justify-center pt-3 pb-1 sm:hidden flex-shrink-0">
+                <div className="h-1 w-10 rounded-full bg-slate-300 dark:bg-navy-600" />
+              </div>
 
-              {/* Header */}
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-navy-800 px-6 py-4">
+              {/* Header — fixed */}
+              <div className="flex-shrink-0 flex items-center justify-between border-b border-slate-100 dark:border-navy-800 px-5 py-3 sm:px-6 sm:py-4">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">ℹ️</span>
                   <h2 className="text-base font-bold text-slate-900 dark:text-white">About This Dashboard</h2>
@@ -47,11 +61,11 @@ export function InfoModal({ open, onClose }: Props) {
                 </button>
               </div>
 
-              {/* Body */}
-              <div className="divide-y divide-slate-100 dark:divide-navy-800 px-6">
+              {/* Body — scrollable */}
+              <div className="flex-1 overflow-y-auto overscroll-contain divide-y divide-slate-100 dark:divide-navy-800 px-5 sm:px-6">
 
                 {/* Section 1 – Race start time */}
-                <div className="py-5 flex gap-4">
+                <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
                   <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-peachtree-50 dark:bg-peachtree-500/10 text-peachtree-600 dark:text-peachtree-400">
                     <ClockIcon className="h-5 w-5" />
                   </div>
@@ -73,7 +87,7 @@ export function InfoModal({ open, onClose }: Props) {
                 </div>
 
                 {/* Section 2 – Data coverage */}
-                <div className="py-5 flex gap-4">
+                <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
                   <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-navy-50 dark:bg-navy-700/40 text-navy-600 dark:text-navy-300">
                     <CalendarDaysIcon className="h-5 w-5" />
                   </div>
@@ -93,7 +107,7 @@ export function InfoModal({ open, onClose }: Props) {
                 </div>
 
                 {/* Section 3 – Stress Score */}
-                <div className="py-5 flex gap-4">
+                <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
                   <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400">
                     <CalculatorIcon className="h-5 w-5" />
                   </div>
@@ -104,7 +118,7 @@ export function InfoModal({ open, onClose }: Props) {
                     <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       A composite metric designed to capture overall heat stress for runners:
                     </p>
-                    <div className="mt-2 mb-2 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-navy-800 px-4 py-2.5 font-mono text-sm text-slate-800 dark:text-slate-200">
+                    <div className="mt-2 mb-2 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-navy-800 px-4 py-2.5 font-mono text-xs sm:text-sm text-slate-800 dark:text-slate-200">
                       Score = Heat Index + (Dew Point × 1.5)
                     </div>
                     <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
@@ -112,7 +126,7 @@ export function InfoModal({ open, onClose }: Props) {
                       the body's ability to cool itself through sweating — the primary driver of
                       heat-related stress for endurance athletes. A higher score means harder conditions.
                     </p>
-                    <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                    <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2 text-xs">
                       {[
                         { emoji: '🟢', label: 'Comfortable', range: '< 160' },
                         { emoji: '🟡', label: 'Warm', range: '160–170' },
@@ -129,10 +143,10 @@ export function InfoModal({ open, onClose }: Props) {
                 </div>
               </div>
 
-              {/* Footer */}
-              <div className="border-t border-slate-100 dark:border-navy-800 px-6 py-4 flex items-center justify-between">
+              {/* Footer — fixed */}
+              <div className="flex-shrink-0 border-t border-slate-100 dark:border-navy-800 px-5 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
                 <p className="text-xs text-slate-400 dark:text-slate-500">
-                  Weather data via{' '}
+                  Data via{' '}
                   <a
                     href="https://www.wunderground.com"
                     target="_blank"
@@ -157,4 +171,3 @@ export function InfoModal({ open, onClose }: Props) {
     </AnimatePresence>
   )
 }
-
