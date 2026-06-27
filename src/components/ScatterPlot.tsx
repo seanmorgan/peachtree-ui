@@ -249,11 +249,10 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
       <div className="flex flex-wrap gap-2 px-5 pb-4">
         {['Comfortable', 'Warm', 'Hot', 'Brutal', 'Historic'].map((label, i) => {
           const colors = ['#22c55e', '#eab308', '#f97316', '#ef4444', '#a855f7']
-          const emojis = ['🟢', '🟡', '🟠', '🔴', '🟣']
           return (
             <span key={label} className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
               <span className="h-2.5 w-2.5 rounded-full" style={{ background: colors[i] }} />
-              {emojis[i]} {label}
+              {label}
             </span>
           )
         })}

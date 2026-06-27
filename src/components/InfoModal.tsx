@@ -62,15 +62,12 @@ export function InfoModal({ open, onClose }: Props) {
                     <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       The Peachtree Road Race has started at different times throughout its history — as late as{' '}
                       <span className="font-medium text-slate-700 dark:text-slate-300">10:00 AM in 1970</span>.
-                      The start time was moved progressively earlier to beat the heat, settling at 7:00 AM by 1996
-                      where it has remained.
+                      Over the years, the start time was moved progressively earlier to beat the heat.
                     </p>
                     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       To enable fair year-over-year comparison, this dashboard uses the weather observation{' '}
                       <span className="font-medium text-slate-700 dark:text-slate-300">closest to 7:00 AM</span>{' '}
-                      for every year, regardless of the actual start time that year. The{' '}
-                      <span className="font-mono text-xs bg-slate-100 dark:bg-navy-800 px-1 py-0.5 rounded">minutesFromTarget</span>{' '}
-                      column records how close each observation was.
+                      for every year, regardless of the actual start time that year.
                     </p>
                   </div>
                 </div>

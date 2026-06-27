@@ -48,7 +48,7 @@ export default function App() {
               <span className="text-4xl leading-none select-none">🏃</span>
               <div>
                 <h1 className="text-xl font-extrabold text-white tracking-tight leading-tight">
-                  Peachtree Road Race
+                  Peachtree Road Race Weather Archive
                 </h1>
                 <p className="text-sm font-semibold text-peachtree-200 mt-0.5">
                   Race-Start Weather History &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; July 4th &nbsp;·&nbsp; 1982–2025
@@ -60,12 +60,15 @@ export default function App() {
             <div className="flex items-center gap-3 flex-shrink-0">
               {/* Category legend – hidden on small screens */}
               <div className="hidden lg:flex items-center gap-3">
-                {STRESS_CATEGORIES.map(c => (
-                  <span key={c.label} className="flex items-center gap-1.5 text-xs font-medium text-white/70">
-                    <span className="h-2 w-2 rounded-full" style={{ background: c.color }} />
-                    {c.label}
-                  </span>
-                ))}
+                <p className="text-sm font-semibold text-peachtree-200 mt-0.5">
+                  Created by Sean Morgan • {' '}
+                  <a href="https://github.com/seanmorgan/peachtree-ui" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
+                    GitHub
+                  </a>{' '} • {' '}
+                  <a href="mailto:websean.com@gmail.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
+                    Feedback
+                  </a>{' '}
+                </p>
               </div>
 
               {/* Info button */}
@@ -183,6 +186,9 @@ export default function App() {
 
             {/* Footer */}
             <footer className="border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-400 dark:text-slate-600">
+              <p>
+                This website is an independent project and is not affiliated with or endorsed by the Atlanta Track Club or the Peachtree Road Race.
+              </p>
               <p>
                 Data sourced from{' '}
                 <a href="https://www.wunderground.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
