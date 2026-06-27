@@ -1,6 +1,6 @@
-import { useState, useCallback, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { MoonIcon, SunIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline'
+import { useState, useCallback } from 'react'
+import { motion } from 'framer-motion'
+import { MoonIcon, SunIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import { type MetricKey, type ForecastData } from './types'
 import { useWeatherData } from './hooks/useWeatherData'
 import { useDarkMode } from './hooks/useDarkMode'
@@ -10,45 +10,18 @@ import { RankingsTable } from './components/RankingsTable'
 import { ScatterPlot } from './components/ScatterPlot'
 import { YearDetails } from './components/YearDetails'
 import { ForecastPanel } from './components/ForecastPanel'
+import { InfoModal } from './components/InfoModal'
 import { STRESS_CATEGORIES } from './utils/categories'
 
 export default function App() {
-  const { data, loading, error, loadFile } = useWeatherData('/peachtree-start-conditions.csv')
+  const { data, loading, error } = useWeatherData('/peachtree-start-conditions.csv')
   const [isDark, toggleDark] = useDarkMode()
 
   const [selectedYear, setSelectedYear] = useState<number | null>(null)
   const [activeMetrics, setActiveMetrics] = useState<MetricKey[]>(['tempF', 'dewPointF'])
   const [forecast, setForecast] = useState<ForecastData | null>(null)
   const [showForecast, setShowForecast] = useState(true)
-
-  // Drag-and-drop
-  const [isDragging, setIsDragging] = useState(false)
-  const dragCounterRef = useRef(0)
-
-  const handleDragEnter = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    dragCounterRef.current++
-    if (e.dataTransfer.items[0]?.type === 'text/csv' || e.dataTransfer.items[0]?.kind === 'file') {
-      setIsDragging(true)
-    }
-  }, [])
-
-  const handleDragLeave = useCallback(() => {
-    dragCounterRef.current--
-    if (dragCounterRef.current === 0) setIsDragging(false)
-  }, [])
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    dragCounterRef.current = 0
-    setIsDragging(false)
-    const file = e.dataTransfer.files[0]
-    if (file) {
-      loadFile(file)
-      setSelectedYear(null)
-      setForecast(null)
-    }
-  }, [loadFile])
+  const [showInfo, setShowInfo] = useState(false)
 
   const toggleMetric = useCallback((key: MetricKey) => {
     setActiveMetrics(prev =>
@@ -63,29 +36,8 @@ export default function App() {
   }, [])
 
   return (
-    <div
-      className="min-h-screen bg-slate-50 dark:bg-navy-950"
-      onDragEnter={handleDragEnter}
-      onDragOver={e => e.preventDefault()}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
-      {/* ── Drag Overlay ── */}
-      <AnimatePresence>
-        {isDragging && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-peachtree-500/10 backdrop-blur-sm"
-            style={{ border: '3px dashed #cb333b' }}
-          >
-            <CloudArrowUpIcon className="h-16 w-16 text-peachtree-500 mb-3" />
-            <p className="text-xl font-bold text-peachtree-600 dark:text-peachtree-400">Drop CSV to reload</p>
-            <p className="text-sm text-indigo-400 mt-1">Replaces current dataset</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="min-h-screen bg-slate-50 dark:bg-navy-950">
+      <InfoModal open={showInfo} onClose={() => setShowInfo(false)} />
 
       {/* ── Header ── */}
       <header className="header-gradient border-b border-peachtree-700/40 sticky top-0 z-40 shadow-lg shadow-peachtree-900/20">
@@ -115,6 +67,15 @@ export default function App() {
                   </span>
                 ))}
               </div>
+
+              {/* Info button */}
+              <button
+                onClick={() => setShowInfo(true)}
+                className="rounded-lg border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
+                aria-label="About this dashboard"
+              >
+                <InformationCircleIcon className="h-4 w-4" />
+              </button>
 
               {/* Dark mode toggle */}
               <button
@@ -147,7 +108,7 @@ export default function App() {
         {error && (
           <div className="rounded-2xl border border-red-200 bg-red-50 dark:border-red-800/40 dark:bg-red-900/20 p-6 text-center">
             <p className="text-red-600 dark:text-red-400 font-medium">Failed to load data: {error}</p>
-            <p className="text-xs text-red-400 mt-1">Drag-and-drop a CSV file to try again</p>
+            <p className="text-xs text-red-400 mt-1">Please check the console for details.</p>
           </div>
         )}
 
@@ -227,7 +188,7 @@ export default function App() {
                 <a href="https://www.wunderground.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
                   Weather Underground
                 </a>{' '}
-                · Fulton County Airport (KFTY) · Drop a new CSV anywhere on the page to reload
+                 · Fulton County Airport (KFTY)
               </p>
             </footer>
           </motion.div>
