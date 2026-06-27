@@ -41,16 +41,21 @@ export default function App() {
       {/* ── Header ── */}
       <header className="header-gradient border-b border-peachtree-700/40 sticky top-0 z-40 shadow-lg shadow-peachtree-900/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between gap-4">
+          <div className="flex min-h-16 sm:h-20 items-center justify-between gap-3 py-3 sm:py-0">
             {/* Branding */}
-            <div className="flex items-center gap-4">
-              <span className="text-4xl leading-none select-none">🏃</span>
-              <div>
-                <h1 className="text-xl font-extrabold text-white tracking-tight leading-tight">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+              <span className="text-2xl sm:text-4xl leading-none select-none flex-shrink-0">🏃</span>
+              <div className="min-w-0">
+                <h1 className="text-sm sm:text-xl font-extrabold text-white tracking-tight leading-snug">
                   Peachtree Road Race Weather Archive
                 </h1>
-                <p className="text-sm font-semibold text-peachtree-200 mt-0.5">
+                {/* Full subtitle on sm+ */}
+                <p className="hidden sm:block text-sm font-semibold text-peachtree-200 mt-0.5">
                   Race-Start Weather History &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; July 4th &nbsp;·&nbsp; 1982–2025
+                </p>
+                {/* Condensed subtitle on mobile */}
+                <p className="block sm:hidden text-[11px] font-medium text-peachtree-200 mt-0.5">
+                  Atlanta, GA · July 4th · 1982–2025
                 </p>
               </div>
             </div>
