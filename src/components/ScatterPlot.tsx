@@ -206,7 +206,7 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
             {/* Historical data */}
             <Scatter
               data={scatterData}
-              onClick={(d) => onSelectYear((d as WeatherRecord).year)}
+              onClick={(d: unknown) => onSelectYear((d as WeatherRecord).year)}
               shape={(props: unknown) => {
                 const p = props as { cx?: number; cy?: number; payload?: WeatherRecord }
                 return (
@@ -267,4 +267,5 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
     </motion.div>
   )
 }
+
 

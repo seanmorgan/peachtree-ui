@@ -79,7 +79,7 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
             <input
               type="number"
               value={tempInput}
-              onChange={e => setTempInput(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTempInput(e.target.value)}
               placeholder="e.g. 75"
               min={50}
               max={110}
@@ -93,7 +93,7 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
             <input
               type="number"
               value={dewInput}
-              onChange={e => setDewInput(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDewInput(e.target.value)}
               placeholder="e.g. 72"
               min={30}
               max={90}
@@ -174,4 +174,6 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
     </motion.div>
   )
 }
+
+
 

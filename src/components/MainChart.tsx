@@ -16,7 +16,6 @@ import { motion } from 'framer-motion'
 import { type WeatherRecord, type MetricKey, type ForecastData, METRIC_MAP } from '../types'
 import { ChartControls } from './ChartControls'
 import { getStressCategory, getConditionEmoji } from '../utils/categories'
-import { getStressCategory as _gs } from '../utils/categories'
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
 function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
@@ -247,4 +246,5 @@ export function MainChart({
     </motion.div>
   )
 }
+
 

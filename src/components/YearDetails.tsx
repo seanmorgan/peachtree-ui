@@ -45,7 +45,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
         </div>
         <select
           value={selectedYear ?? ''}
-          onChange={e => onSelectYear(Number(e.target.value))}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onSelectYear(Number(e.target.value))}
           className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-600"
         >
           <option value="" disabled>Select year…</option>
@@ -150,4 +150,5 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
     </motion.div>
   )
 }
+
 
