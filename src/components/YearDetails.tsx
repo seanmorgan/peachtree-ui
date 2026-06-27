@@ -108,7 +108,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
           </div>
 
           {/* Additional details */}
-            className="rounded-xl border border-slate-100 dark:border-navy-700 bg-slate-50 dark:bg-navy-800/50 p-4"
+          <div className="rounded-xl border border-slate-100 dark:border-navy-700 bg-slate-50 dark:bg-navy-800/50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
               More Details
             </p>
