@@ -51,7 +51,7 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
               <div className="flex-shrink-0 flex items-center justify-between border-b border-slate-100 dark:border-navy-800 px-5 py-3 sm:px-6 sm:py-4">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">ℹ️</span>
-                  <h2 className="text-base font-bold text-slate-900 dark:text-white">About This Dashboard</h2>
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white">About</h2>
                 </div>
                 <button
                   onClick={onClose}
@@ -102,9 +102,8 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
                       but granular hourly weather observations at Fulton County Airport (KFTY) are not
                       reliably available before {yearRange?.min ?? 1982}. This dashboard therefore covers{' '}
                       <span className="font-medium text-slate-700 dark:text-slate-300">
-                        {yearRange ? `${yearRange.min}–${yearRange.max}` : '1982–2025'}
+                        {yearRange ? `${yearRange.min}–${yearRange.max}` : '1982–2025'}.
                       </span>{' '}
-                      — {yearRange ? yearRange.max - yearRange.min + 1 : 44} years of race-morning conditions.
                     </p>
                   </div>
                 </div>
