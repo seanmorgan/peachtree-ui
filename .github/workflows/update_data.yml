@@ -53,20 +53,20 @@ jobs:
             python scripts/update_data.py \
               --start-year "$START_YEAR" \
               --end-year "$END_YEAR" \
-              --csv peachtree-start-conditions.csv
+              --csv public/peachtree-start-conditions.csv
 
           elif [ -n "$YEAR" ]; then
             echo "Updating year: $YEAR"
             python scripts/update_data.py \
               --year "$YEAR" \
-              --csv peachtree-start-conditions.csv
+              --csv public/peachtree-start-conditions.csv
 
           else
             CURRENT_YEAR="$(date +'%Y')"
             echo "No year supplied. Updating current year: $CURRENT_YEAR"
             python scripts/update_data.py \
               --year "$CURRENT_YEAR" \
-              --csv peachtree-start-conditions.csv
+              --csv public/peachtree-start-conditions.csv
           fi
 
       - name: Commit updated CSV
@@ -74,7 +74,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add peachtree-start-conditions.csv
+          git add public/peachtree-start-conditions.csv
 
           if git diff --cached --quiet; then
             echo "No CSV changes to commit."
