@@ -2,31 +2,37 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { type WeatherRecord, METRIC_CONFIGS } from '../types'
 import { StressBadge } from './StressBadge'
-import { getRankForYear, getOrdinal } from '../utils/calculations'
+import { getRankForRecord, getRecordId, getRecordLabel, getOrdinal } from '../utils/calculations'
 import { getConditionEmoji } from '../utils/categories'
 
 interface Props {
   data: WeatherRecord[]
-  selectedYear: number | null
-  onSelectYear: (year: number) => void
+  selectedId: string | null
+  onSelectId: (id: string) => void
 }
 
 const DISPLAY_METRICS = METRIC_CONFIGS.map(m => m.key)
 
-export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
+export function YearDetails({ data, selectedId, onSelectId }: Props) {
   const record = useMemo(
-    () => (selectedYear ? data.find(r => r.year === selectedYear) ?? null : null),
-    [data, selectedYear],
+    () => (selectedId ? data.find(r => getRecordId(r) === selectedId) ?? null : null),
+    [data, selectedId],
   )
 
   const rankings = useMemo(() => {
     if (!record) return {}
+    const id = getRecordId(record)
     return Object.fromEntries(
-      DISPLAY_METRICS.map(k => [k, getRankForYear(data, record.year, k)])
+      DISPLAY_METRICS.map(k => [k, getRankForRecord(data, id, k)])
     )
   }, [record, data])
 
-  const years = useMemo(() => data.map(r => r.year).sort((a, b) => b - a), [data])
+  // Build dropdown options sorted newest-first; sub-years appear as separate entries
+  const dropdownOptions = useMemo(() =>
+    [...data]
+      .sort((a, b) => b.year !== a.year ? b.year - a.year : (b.subYear || '').localeCompare(a.subYear || ''))
+      .map(r => ({ id: getRecordId(r), label: getRecordLabel(r) })),
+  [data])
 
   return (
     <motion.div
@@ -44,13 +50,13 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
           </p>
         </div>
         <select
-          value={selectedYear ?? ''}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onSelectYear(Number(e.target.value))}
+          value={selectedId ?? ''}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onSelectId(e.target.value)}
           className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-peachtree-500 dark:border-navy-700 dark:bg-navy-800 dark:text-slate-300 dark:hover:border-navy-600"
         >
           <option value="" disabled>Select year…</option>
-          {years.map(y => (
-            <option key={y} value={y}>{y}</option>
+          {dropdownOptions.map(opt => (
+            <option key={opt.id} value={opt.id}>{opt.label}</option>
           ))}
         </select>
       </div>
@@ -65,7 +71,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
         <div className="p-5 space-y-5">
           {/* Year badge + condition */}
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-3xl font-bold text-slate-900 dark:text-white">{record.year}</span>
+            <span className="text-3xl font-bold text-slate-900 dark:text-white">{getRecordLabel(record)}</span>
             <StressBadge score={record.runnerStressScore} size="lg" />
             <span className="text-sm text-slate-500 dark:text-slate-400">
               {getConditionEmoji(record.condition)} {record.condition}
@@ -99,8 +105,7 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
                     {val.toFixed(m.decimals)}{m.unit}
                   </p>
                   <p className="mt-1 text-xs font-medium" style={{ color: m.color }}>
-                    {getOrdinal(rank)} of {total}
-                    {rank === 1 && ' 🔥'}
+                    {getOrdinal(rank)} of {total}{rank === 1 && ' 🔥'}
                   </p>
                 </div>
               )
@@ -150,5 +155,3 @@ export function YearDetails({ data, selectedYear, onSelectYear }: Props) {
     </motion.div>
   )
 }
-
-

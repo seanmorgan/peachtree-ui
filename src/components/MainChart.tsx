@@ -16,6 +16,7 @@ import { motion } from 'framer-motion'
 import { type WeatherRecord, type MetricKey, type ForecastData, METRIC_MAP } from '../types'
 import { ChartControls } from './ChartControls'
 import { getStressCategory, getConditionEmoji } from '../utils/categories'
+import { getRecordId, getRecordLabel } from '../utils/calculations'
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
 function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
@@ -68,8 +69,8 @@ interface Props {
   data: WeatherRecord[]
   activeMetrics: MetricKey[]
   onToggleMetric: (key: MetricKey) => void
-  selectedYear: number | null
-  onSelectYear: (year: number) => void
+  selectedId: string | null
+  onSelectId: (id: string) => void
   forecast: ForecastData | null
   showForecast: boolean
 }
@@ -78,13 +79,14 @@ export function MainChart({
   data,
   activeMetrics,
   onToggleMetric,
-  selectedYear,
-  onSelectYear,
+  selectedId,
+  onSelectId,
   forecast,
   showForecast,
 }: Props) {
   const chartRef = useRef<HTMLDivElement>(null)
-  const chartData = data.map(r => ({ ...r }))
+  // Augment each record with a unique displayId for the X-axis
+  const chartData = data.map(r => ({ ...r, displayId: getRecordId(r) }))
   const yearRange = useMemo(() => (
     data.length ? { min: data[0].year, max: data[data.length - 1].year } : null
   ), [data])
@@ -138,7 +140,7 @@ export function MainChart({
       {/* Chart */}
       <div ref={chartRef} className="px-2 pb-4 pt-4">
         <ResponsiveContainer width="100%" height={360}>
-          <ComposedChart data={chartData} onClick={e => e?.activePayload?.[0] && onSelectYear((e.activePayload[0].payload as WeatherRecord).year)}>
+          <ComposedChart data={chartData} onClick={e => e?.activePayload?.[0] && onSelectId(getRecordId(e.activePayload[0].payload as WeatherRecord))}>
             <defs>
               {activeMetrics.map(k => (
                 <linearGradient key={k} id={`grad-${k}`} x1="0" y1="0" x2="0" y2="1">
@@ -156,12 +158,13 @@ export function MainChart({
             />
 
             <XAxis
-              dataKey="year"
+              dataKey="displayId"
               tick={{ fontSize: 11, fill: 'currentColor' }}
               className="text-slate-400 dark:text-slate-500"
               tickLine={false}
               axisLine={false}
               interval={4}
+              tickFormatter={(v: string) => v.replace(/[a-z]$/, '')}
             />
 
             <YAxis
@@ -189,11 +192,11 @@ export function MainChart({
                 strokeWidth={2.5}
                 dot={(props) => {
                   const { cx, cy, payload } = props as { cx: number; cy: number; payload: WeatherRecord }
-                  const isSelected = payload.year === selectedYear
-                  if (!isSelected && idx !== 0) return <g key={payload.year} />
+                  const isSelected = getRecordId(payload) === selectedId
+                  if (!isSelected && idx !== 0) return <g key={getRecordId(payload)} />
                   return (
                     <circle
-                      key={payload.year}
+                      key={getRecordId(payload)}
                       cx={cx}
                       cy={cy}
                       r={isSelected ? 5 : 3}
@@ -210,14 +213,14 @@ export function MainChart({
               />
             ))}
 
-            {/* Selected year reference line */}
-            {selectedYear && (
+            {/* Selected record reference line */}
+            {selectedId && (
               <ReferenceLine
-                x={selectedYear}
+                x={selectedId}
                 stroke="#cb333b"
                 strokeWidth={1.5}
                 strokeDasharray="4 4"
-                label={{ value: `${selectedYear}`, position: 'top', fontSize: 11, fill: '#cb333b' }}
+                label={{ value: getRecordLabel(data.find(r => getRecordId(r) === selectedId)!), position: 'top', fontSize: 11, fill: '#cb333b' }}
               />
             )}
 

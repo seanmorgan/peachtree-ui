@@ -1,6 +1,6 @@
 # 🏃 Peachtree Road Race — Weather Archive
 
-An interactive, fully client-side dashboard visualizing 44 years of race-morning weather conditions at the **AJC Peachtree Road Race** (Atlanta, GA · July 4th · 1982–2025).
+An interactive, fully client-side dashboard visualizing 40+ years of race-morning weather conditions at the **AJC Peachtree Road Race** (Atlanta, GA · July 4th · 1982–Present).
 
 > **Disclaimer:** This is an independent project and is not affiliated with or endorsed by the Atlanta Track Club or the Peachtree Road Race.
 
@@ -8,16 +8,16 @@ An interactive, fully client-side dashboard visualizing 44 years of race-morning
 
 ## Features
 
-| Section | Description |
-|---|---|
-| **Summary Cards** | Extremes (hottest, coolest, highest dew point, heat index, stress score) plus historical averages |
+| Section | Description                                                                                               |
+|---|-----------------------------------------------------------------------------------------------------------|
+| **Summary Cards** | Extremes (hottest, coolest, highest dew point, heat index, stress score) plus historical averages         |
 | **Historical Chart** | Multi-metric line chart (temperature, dew point, heat index, humidity, stress score) with togglable series |
-| **Rankings Table** | Fully sortable table of all 44 years, ranked by Runner Stress Score |
-| **Scatter Plot** | Temperature vs. dew point, color-coded by stress category |
-| **Year Details** | Deep-dive panel for any selected year — all metrics plus historical rank for each |
-| **Forecast Panel** | Enter hypothetical conditions to auto-compute heat index, stress score, and see how they'd rank all-time |
-| **Dark Mode** | System-aware, toggleable, persisted in `localStorage` |
-| **PNG Export** | Download the main chart as a PNG |
+| **Rankings Table** | Fully sortable table of 40+ years, ranked by Runner Stress Score                                       |
+| **Scatter Plot** | Temperature vs. dew point, color-coded by stress category                                                 |
+| **Year Details** | Deep-dive panel for any selected year — all metrics plus historical rank for each                         |
+| **Forecast Panel** | Enter hypothetical conditions to auto-compute heat index, stress score, and see how they'd rank all-time  |
+| **Dark Mode** | System-aware, toggleable, persisted in `localStorage`                                                     |
+| **PNG Export** | Download the main chart as a PNG                                                                          |
 
 ### Runner Stress Categories
 
@@ -41,8 +41,8 @@ Dew point is weighted more heavily because high atmospheric moisture impairs the
 
 ## Data Notes
 
-- **Coverage:** 1982–2025 (44 years). The race began July 4, 1970, but granular hourly records at Fulton County Airport (KFTY) are not reliably available before 1982.
-- **Reference time:** All years are pinned to **7:00 AM** for fair comparison. The race start time has varied historically (10:00 AM in 1970, progressively earlier until settling at 7:00 AM by 1996). The `minutesFromTarget` column records how close each observation was to 7:00 AM.
+- **Coverage:** 1982–Present (40+ years). The race began July 4, 1970, but granular hourly records at Fulton County Airport (KFTY) are not reliably available before 1982.
+- **Reference time:** All years are pinned to **7:00 AM** for fair comparison. The race start time has varied historically (10:00 AM in 1970, then progressively earlier over the years). The `minutesFromTarget` column records how close each observation was to 7:00 AM.
 - **Source:** [Weather Underground](https://www.wunderground.com) · Station KFTY (Fulton County Airport, Atlanta, GA)
 
 ---

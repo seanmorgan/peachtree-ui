@@ -14,7 +14,11 @@ export function useWeatherData(csvPath: string) {
     const onComplete = (results: Papa.ParseResult<WeatherRecord>) => {
       const rows = results.data
         .filter(r => r.year)
-        .sort((a, b) => a.year - b.year)
+        .sort((a, b) => {
+          if (a.year !== b.year) return a.year - b.year
+          // sub-years ("2021a" before "2021b") sorted alphabetically
+          return (a.subYear || '').localeCompare(b.subYear || '')
+        })
       setData(rows)
       setLoading(false)
     }

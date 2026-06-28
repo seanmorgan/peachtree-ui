@@ -2,6 +2,7 @@
 
 export interface WeatherRecord {
   year: number
+  subYear: string        // empty string for normal years; "2021a"/"2021b" for multi-day races
   date: string
   time: string
   targetTime: string

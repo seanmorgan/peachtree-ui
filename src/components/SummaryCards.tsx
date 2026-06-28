@@ -9,14 +9,15 @@ import {
 } from '@heroicons/react/24/outline'
 import { type WeatherRecord } from '../types'
 import { MetricCard } from './MetricCard'
+import { getRecordId } from '../utils/calculations'
 
 interface Props {
   data: WeatherRecord[]
-  selectedYear: number | null
-  onSelectYear: (year: number) => void
+  selectedId: string | null
+  onSelectId: (id: string) => void
 }
 
-export function SummaryCards({ data, selectedYear, onSelectYear }: Props) {
+export function SummaryCards({ data, selectedId, onSelectId }: Props) {
   const cards = useMemo(() => {
     if (!data.length) return { extremes: [], averages: [] }
     const maxBy = <K extends keyof WeatherRecord>(field: K) =>
@@ -145,8 +146,8 @@ export function SummaryCards({ data, selectedYear, onSelectYear }: Props) {
             icon={card.icon}
             accentColor={card.accentColor}
             stressScore={card.stressScore}
-            selected={selectedYear === card.year}
-            onClick={() => onSelectYear(card.year)}
+            selected={selectedId === getRecordId(card.record)}
+            onClick={() => onSelectId(getRecordId(card.record))}
             delay={i * 0.07}
           />
         ))}
@@ -163,8 +164,8 @@ export function SummaryCards({ data, selectedYear, onSelectYear }: Props) {
             subtitle={card.subtitle}
             icon={card.icon}
             accentColor={card.accentColor}
-            selected={selectedYear === card.year}
-            onClick={() => onSelectYear(card.year)}
+            selected={selectedId === getRecordId(card.record)}
+            onClick={() => onSelectId(getRecordId(card.record))}
             delay={0.35 + i * 0.07}
           />
         ))}

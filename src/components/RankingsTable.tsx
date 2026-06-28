@@ -3,14 +3,14 @@ import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import { motion } from 'framer-motion'
 import { type WeatherRecord, type SortField, type SortDir, type ForecastData } from '../types'
 import { StressBadge } from './StressBadge'
-import { getRankedData } from '../utils/calculations'
+import { getRankedData, getRecordId, getRecordLabel } from '../utils/calculations'
 import { getConditionEmoji } from '../utils/categories'
 import { cn } from '../utils/cn'
 
 interface Props {
   data: WeatherRecord[]
-  selectedYear: number | null
-  onSelectYear: (year: number) => void
+  selectedId: string | null
+  onSelectId: (id: string) => void
   forecast: ForecastData | null
   showForecast: boolean
 }
@@ -34,7 +34,7 @@ const COLS: Array<{ field: SortField; label: string; align?: string }> = [
   { field: 'condition', label: 'Condition', align: 'left' },
 ]
 
-export function RankingsTable({ data, selectedYear, onSelectYear, forecast, showForecast }: Props) {
+export function RankingsTable({ data, selectedId, onSelectId, forecast, showForecast }: Props) {
   const [sortField, setSortField] = useState<SortField>('rank')
   const [sortDir, setSortDir] = useState<SortDir>('asc')
 
@@ -43,12 +43,20 @@ export function RankingsTable({ data, selectedYear, onSelectYear, forecast, show
   const sorted = useMemo(() => {
     const base = [...rankedData]
     base.sort((a, b) => {
-      let av: number | string = sortField === 'rank' ? a.rank : (a[sortField as keyof typeof a] as number | string)
-      let bv: number | string = sortField === 'rank' ? b.rank : (b[sortField as keyof typeof b] as number | string)
-      if (typeof av === 'string' && typeof bv === 'string') {
-        return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av)
+      if (sortField === 'rank') {
+        return sortDir === 'asc' ? a.rank - b.rank : b.rank - a.rank
       }
-      return sortDir === 'asc' ? (av as number) - (bv as number) : (bv as number) - (av as number)
+      const av = a[sortField as keyof typeof a] as number | string
+      const bv = b[sortField as keyof typeof b] as number | string
+      let cmp: number
+      if (typeof av === 'string' && typeof bv === 'string') {
+        cmp = av.localeCompare(bv)
+      } else {
+        cmp = (av as number) - (bv as number)
+      }
+      // Tiebreaker: sub-years stay chronological within the same year
+      if (cmp === 0) cmp = (a.subYear || '').localeCompare(b.subYear || '')
+      return sortDir === 'asc' ? cmp : -cmp
     })
     return base
   }, [rankedData, sortField, sortDir])
@@ -133,11 +141,12 @@ export function RankingsTable({ data, selectedYear, onSelectYear, forecast, show
             )}
 
             {sorted.map((row) => {
-              const isSelected = row.year === selectedYear
+              const rowId = getRecordId(row)
+              const isSelected = rowId === selectedId
               return (
                 <tr
-                  key={row.year}
-                  onClick={() => onSelectYear(row.year)}
+                  key={rowId}
+                  onClick={() => onSelectId(rowId)}
                   className={cn(
                     'cursor-pointer transition-colors duration-100',
                     isSelected
@@ -153,7 +162,7 @@ export function RankingsTable({ data, selectedYear, onSelectYear, forecast, show
                   <td className={cn('px-4 py-2.5 text-right tabular-nums font-semibold',
                     isSelected ? 'text-peachtree-600 dark:text-peachtree-400' : 'text-slate-700 dark:text-slate-300'
                   )}>
-                    {row.year}
+                    {getRecordLabel(row)}
                   </td>
                   <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.tempF}°</td>
                   <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.dewPointF}°</td>

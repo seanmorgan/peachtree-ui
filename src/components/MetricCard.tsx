@@ -4,7 +4,7 @@ import { StressBadge } from './StressBadge'
 
 interface Props {
   title: string
-  year: number
+  year: number | string
   value: string
   subtitle?: string
   icon: React.ReactNode

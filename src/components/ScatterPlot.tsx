@@ -13,6 +13,7 @@ import {
 import { motion } from 'framer-motion'
 import { type WeatherRecord, type ForecastData } from '../types'
 import { getStressCategory, getConditionEmoji } from '../utils/categories'
+import { getRecordId, getRecordLabel } from '../utils/calculations'
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
 function ScatterTooltip({ active, payload }: TooltipProps<number, string>) {
@@ -24,7 +25,7 @@ function ScatterTooltip({ active, payload }: TooltipProps<number, string>) {
     <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-navy-700 dark:bg-navy-900/95 min-w-[160px]">
       <div className="mb-2 flex items-center justify-between gap-3">
         <span className="text-sm font-bold text-slate-900 dark:text-white">
-          {d.isForecast ? '📍 Forecast' : `${d.year}`}
+          {d.isForecast ? '📍 Forecast' : getRecordLabel(d)}
         </span>
         <span
           className="rounded-full px-2 py-0.5 text-xs font-semibold text-white"
@@ -69,14 +70,14 @@ interface DotProps {
   cx?: number
   cy?: number
   payload?: WeatherRecord & { isForecast?: boolean }
-  selectedYear: number | null
-  onSelectYear: (y: number) => void
+  selectedId: string | null
+  onSelectId: (id: string) => void
 }
 
-function CustomDot({ cx = 0, cy = 0, payload, selectedYear, onSelectYear }: DotProps) {
+function CustomDot({ cx = 0, cy = 0, payload, selectedId, onSelectId }: DotProps) {
   if (!payload) return null
   const cat = getStressCategory(payload.runnerStressScore ?? 0)
-  const isSelected = payload.year === selectedYear
+  const isSelected = getRecordId(payload) === selectedId
 
   if (payload.isForecast) {
     // Diamond shape for forecast
@@ -108,7 +109,7 @@ function CustomDot({ cx = 0, cy = 0, payload, selectedYear, onSelectYear }: DotP
       stroke={isSelected ? '#fff' : 'transparent'}
       strokeWidth={2.5}
       style={{ cursor: 'pointer', transition: 'r 0.15s ease' }}
-      onClick={() => onSelectYear(payload.year)}
+      onClick={() => onSelectId(getRecordId(payload))}
       opacity={0.85}
     />
   )
@@ -117,13 +118,13 @@ function CustomDot({ cx = 0, cy = 0, payload, selectedYear, onSelectYear }: DotP
 // ─── Scatter Plot ─────────────────────────────────────────────────────────────
 interface Props {
   data: WeatherRecord[]
-  selectedYear: number | null
-  onSelectYear: (year: number) => void
+  selectedId: string | null
+  onSelectId: (id: string) => void
   forecast: ForecastData | null
   showForecast: boolean
 }
 
-export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showForecast }: Props) {
+export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForecast }: Props) {
   const scatterData = useMemo(
     () => data.map(r => ({ ...r })),
     [data],
@@ -131,7 +132,7 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
 
   const forecastPoint = useMemo(() => {
     if (!forecast || !showForecast) return []
-    return [{ ...forecast, year: 0, isForecast: true, condition: '', wind: '', windSpeedMph: 0, windGustMph: 0, pressureIn: 0, precipIn: 0, date: '', time: '', targetTime: '', minutesFromTarget: 0, sourceUrl: '' }]
+    return [{ ...forecast, year: 0, subYear: '', isForecast: true, condition: '', wind: '', windSpeedMph: 0, windGustMph: 0, pressureIn: 0, precipIn: 0, date: '', time: '', targetTime: '', minutesFromTarget: 0, sourceUrl: '' }]
   }, [forecast, showForecast])
 
   // Quadrant averages for reference lines
@@ -206,7 +207,7 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
             {/* Historical data */}
             <Scatter
               data={scatterData}
-              onClick={(d: unknown) => onSelectYear((d as WeatherRecord).year)}
+              onClick={(d: unknown) => onSelectId(getRecordId(d as WeatherRecord))}
               shape={(props: unknown) => {
                 const p = props as { cx?: number; cy?: number; payload?: WeatherRecord }
                 return (
@@ -214,8 +215,8 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
                     cx={p.cx}
                     cy={p.cy}
                     payload={p.payload}
-                    selectedYear={selectedYear}
-                    onSelectYear={onSelectYear}
+                    selectedId={selectedId}
+                    onSelectId={onSelectId}
                   />
                 )
               }}
@@ -234,8 +235,8 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
                       cx={p.cx}
                       cy={p.cy}
                       payload={p.payload}
-                      selectedYear={null}
-                      onSelectYear={() => {}}
+                      selectedId={null}
+                      onSelectId={() => {}}
                     />
                   )
                 }}
@@ -266,5 +267,4 @@ export function ScatterPlot({ data, selectedYear, onSelectYear, forecast, showFo
     </motion.div>
   )
 }
-
 

@@ -16,7 +16,7 @@ export default function App() {
   const { data, loading, error } = useWeatherData('/peachtree-start-conditions.csv')
   const [isDark, toggleDark] = useDarkMode()
 
-  const [selectedYear, setSelectedYear] = useState<number | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeMetrics, setActiveMetrics] = useState<MetricKey[]>(['tempF', 'dewPointF'])
   const [forecast, setForecast] = useState<ForecastData | null>(null)
   const [showForecast, setShowForecast] = useState(true)
@@ -30,8 +30,8 @@ export default function App() {
     )
   }, [])
 
-  const handleSelectYear = useCallback((year: number) => {
-    setSelectedYear(prev => (prev === year ? null : year))
+  const handleSelectId = useCallback((id: string) => {
+    setSelectedId(prev => (prev === id ? null : id))
   }, [])
 
   // data is pre-sorted ascending by year from useWeatherData
@@ -144,8 +144,8 @@ export default function App() {
             {/* Summary Cards */}
             <SummaryCards
               data={data}
-              selectedYear={selectedYear}
-              onSelectYear={handleSelectYear}
+              selectedId={selectedId}
+              onSelectId={handleSelectId}
             />
 
             {/* Main Chart */}
@@ -153,8 +153,8 @@ export default function App() {
               data={data}
               activeMetrics={activeMetrics}
               onToggleMetric={toggleMetric}
-              selectedYear={selectedYear}
-              onSelectYear={handleSelectYear}
+              selectedId={selectedId}
+              onSelectId={handleSelectId}
               forecast={forecast}
               showForecast={showForecast}
             />
@@ -162,8 +162,8 @@ export default function App() {
             {/* Rankings Table */}
             <RankingsTable
               data={data}
-              selectedYear={selectedYear}
-              onSelectYear={handleSelectYear}
+              selectedId={selectedId}
+              onSelectId={handleSelectId}
               forecast={forecast}
               showForecast={showForecast}
             />
@@ -172,15 +172,15 @@ export default function App() {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <ScatterPlot
                 data={data}
-                selectedYear={selectedYear}
-                onSelectYear={handleSelectYear}
+                selectedId={selectedId}
+                onSelectId={handleSelectId}
                 forecast={forecast}
                 showForecast={showForecast}
               />
               <YearDetails
                 data={data}
-                selectedYear={selectedYear}
-                onSelectYear={handleSelectYear}
+                selectedId={selectedId}
+                onSelectId={handleSelectId}
               />
             </div>
 
@@ -197,6 +197,15 @@ export default function App() {
             <footer className="border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-400 dark:text-slate-600">
               <p>
                 This website is an independent project and is not affiliated with or endorsed by the Atlanta Track Club or the Peachtree Road Race.
+              </p>
+              <p>
+                Created by Sean Morgan • {' '}
+                <a href="https://github.com/seanmorgan/peachtree-ui" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
+                  GitHub
+                </a>{' '} • {' '}
+                <a href="mailto:websean.com@gmail.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
+                  Feedback
+                </a>{' '}
               </p>
               <p>
                 Data sourced from{' '}

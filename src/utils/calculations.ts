@@ -1,5 +1,21 @@
 import { type WeatherRecord, type MetricKey } from '../types'
 
+// ─── Record identity ───────────────────────────────────────────────────────────
+// Most years: "1982", "2020" etc.
+// Multi-day years: "2021a" (Jul 3), "2021b" (Jul 4)
+export function getRecordId(r: WeatherRecord): string {
+  return r.subYear || String(r.year)
+}
+
+// Human-readable label used in dropdowns and table cells
+export function getRecordLabel(r: WeatherRecord): string {
+  if (!r.subYear) return String(r.year)
+  // "2021a" → "2021 (Jul 3)", "2021b" → "2021 (Jul 4)"
+  const d = new Date(r.date + 'T12:00:00')
+  const mon = d.toLocaleString('en-US', { month: 'short' })
+  return `${r.year} (${mon} ${d.getDate()})`
+}
+
 // ─── Heat Index (NWS Rothfusz regression) ────────────────────────────────────
 // Valid for T >= 80°F; below that, HI = T
 export function computeHeatIndex(tempF: number, humidityPct: number): number {
@@ -55,9 +71,9 @@ export function getRankedData(data: WeatherRecord[]): Array<WeatherRecord & { ra
     .map((r, i) => ({ ...r, rank: i + 1 }))
 }
 
-export function getRankForYear(data: WeatherRecord[], year: number, field: MetricKey): number {
+export function getRankForRecord(data: WeatherRecord[], id: string, field: MetricKey): number {
   const sorted = [...data].sort((a, b) => b[field] - a[field])
-  return sorted.findIndex(r => r.year === year) + 1
+  return sorted.findIndex(r => getRecordId(r) === id) + 1
 }
 
 export function getOrdinal(n: number): string {
