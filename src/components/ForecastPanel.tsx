@@ -49,7 +49,7 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
       <div className="flex items-center justify-between border-b border-slate-100 dark:border-navy-800 px-5 py-4">
         <div>
           <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-            📍 Forecast Comparison
+            📍 Peachtree <strong>What If</strong> Simulator — Plug In Your Own Forecast!
           </h2>
           <p className="text-xs text-slate-400 dark:text-slate-500">
             Enter hypothetical conditions to see how they'd rank historically
