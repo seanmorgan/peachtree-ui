@@ -1,5 +1,11 @@
 import { type WeatherRecord, type MetricKey } from '../types'
 
+// ─── Year helpers ─────────────────────────────────────────────────────────────
+// Count of distinct calendar years — 2021a + 2021b = 1 year, not 2 records
+export function getUniqueYearCount(data: WeatherRecord[]): number {
+  return new Set(data.map(r => r.year)).size
+}
+
 // ─── Record identity ───────────────────────────────────────────────────────────
 // Most years: "1982", "2020" etc.
 // Multi-day years: "2021a" (Jul 3), "2021b" (Jul 4)

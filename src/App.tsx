@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { MoonIcon, SunIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import { type MetricKey, type ForecastData } from './types'
+import { getUniqueYearCount } from './utils/calculations'
 import { useWeatherData } from './hooks/useWeatherData'
 import { useDarkMode } from './hooks/useDarkMode'
 import { SummaryCards } from './components/SummaryCards'
@@ -137,7 +138,7 @@ export default function App() {
                 Race Start Conditions
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                {data.length} years of race-morning weather data{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''} · Closest observation to 7:00 AM start
+                {getUniqueYearCount(data)} years of race-morning weather data{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''} · Closest observation to 7:00 AM start
               </p>
             </div>
 
