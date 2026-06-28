@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useMemo } from 'react'
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -84,8 +84,10 @@ export function MainChart({
   showForecast,
 }: Props) {
   const chartRef = useRef<HTMLDivElement>(null)
-
   const chartData = data.map(r => ({ ...r }))
+  const yearRange = useMemo(() => (
+    data.length ? { min: data[0].year, max: data[data.length - 1].year } : null
+  ), [data])
 
   const handleDownload = useCallback(async () => {
     if (!chartRef.current) return
@@ -123,7 +125,7 @@ export function MainChart({
             Historical Conditions
           </h2>
           <p className="text-xs text-slate-400 dark:text-slate-500">
-            7:00 AM race start · 1982–2025
+            7:00 AM race start{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
           </p>
         </div>
         <ChartControls

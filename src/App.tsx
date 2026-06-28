@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { MoonIcon, SunIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import { type MetricKey, type ForecastData } from './types'
@@ -34,9 +34,14 @@ export default function App() {
     setSelectedYear(prev => (prev === year ? null : year))
   }, [])
 
+  // data is pre-sorted ascending by year from useWeatherData
+  const yearRange = useMemo(() => (
+    data.length ? { min: data[0].year, max: data[data.length - 1].year } : null
+  ), [data])
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-navy-950">
-      <InfoModal open={showInfo} onClose={() => setShowInfo(false)} />
+      <InfoModal open={showInfo} onClose={() => setShowInfo(false)} yearRange={yearRange ?? undefined} />
 
       {/* ── Header ── */}
       <header className="header-gradient border-b border-peachtree-700/40 sticky top-0 z-40 shadow-lg shadow-peachtree-900/20">
@@ -51,11 +56,11 @@ export default function App() {
                 </h1>
                 {/* Full subtitle on sm+ */}
                 <p className="hidden sm:block text-sm font-semibold text-peachtree-200 mt-0.5">
-                  Race-Start Weather History &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; July 4th &nbsp;·&nbsp; 1982–2025
+                  Race-Start Weather History &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; July 4th{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
                 </p>
                 {/* Condensed subtitle on mobile */}
                 <p className="block sm:hidden text-[11px] font-medium text-peachtree-200 mt-0.5">
-                  Atlanta, GA · July 4th · 1982–2025
+                  Atlanta, GA · July 4th{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
                 </p>
               </div>
             </div>
@@ -132,7 +137,7 @@ export default function App() {
                 Race Start Conditions
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                {data.length} years of race-morning weather data · Closest observation to 7:00 AM start
+                {data.length} years of race-morning weather data{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''} · Closest observation to 7:00 AM start
               </p>
             </div>
 

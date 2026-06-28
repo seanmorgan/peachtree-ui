@@ -4,9 +4,10 @@ import { XMarkIcon, ClockIcon, CalendarDaysIcon, CalculatorIcon } from '@heroico
 interface Props {
   open: boolean
   onClose: () => void
+  yearRange?: { min: number; max: number }
 }
 
-export function InfoModal({ open, onClose }: Props) {
+export function InfoModal({ open, onClose, yearRange }: Props) {
   return (
     <AnimatePresence>
       {open && (
@@ -93,15 +94,17 @@ export function InfoModal({ open, onClose }: Props) {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
-                      Data starts in 1982
+                      Data starts in {yearRange?.min ?? 1982}
                     </h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       The Peachtree Road Race began on{' '}
                       <span className="font-medium text-slate-700 dark:text-slate-300">July 4, 1970</span>,
                       but granular hourly weather observations at Fulton County Airport (KFTY) are not
-                      reliably available before 1982. This dashboard therefore covers{' '}
-                      <span className="font-medium text-slate-700 dark:text-slate-300">1982–2025</span>{' '}
-                      — 44 years of race-morning conditions.
+                      reliably available before {yearRange?.min ?? 1982}. This dashboard therefore covers{' '}
+                      <span className="font-medium text-slate-700 dark:text-slate-300">
+                        {yearRange ? `${yearRange.min}–${yearRange.max}` : '1982–2025'}
+                      </span>{' '}
+                      — {yearRange ? yearRange.max - yearRange.min + 1 : 44} years of race-morning conditions.
                     </p>
                   </div>
                 </div>
