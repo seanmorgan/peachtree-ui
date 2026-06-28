@@ -2,7 +2,7 @@
 
 An interactive, fully client-side dashboard visualizing 40+ years of race-morning weather conditions at the **AJC Peachtree Road Race** (Atlanta, GA · July 4th · 1982–Present).
 
-> **Disclaimer:** This is an independent project and is not affiliated with or endorsed by the Atlanta Track Club or the Peachtree Road Race.
+> **Disclaimer:** This project is an independent historical archive. "Peachtree Road Race" and "Atlanta Track Club" are referenced to identify the event being documented. All trademarks are the property of their respective owners.
 
 ---
 

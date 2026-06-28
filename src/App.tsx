@@ -197,9 +197,6 @@ export default function App() {
             {/* Footer */}
             <footer className="border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-400 dark:text-slate-600">
               <p>
-                This website is an independent project and is not affiliated with or endorsed by the Atlanta Track Club or the Peachtree Road Race.
-              </p>
-              <p>
                 Created by Sean Morgan • {' '}
                 <a href="https://github.com/seanmorgan/peachtree-ui" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
                   GitHub
@@ -209,11 +206,13 @@ export default function App() {
                 </a>{' '}
               </p>
               <p>
-                Data sourced from{' '}
-                <a href="https://www.wunderground.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
-                  Weather Underground
-                </a>{' '}
-                 · Fulton County Airport (KFTY)
+                The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan. The source code is licensed under the MIT License.
+              </p>
+              <p>
+                Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.
+              </p>
+              <p>
+                This website is an independent project and is not affiliated with or endorsed by the Atlanta Track Club, the Peachtree Road Race, or Weather Underground.
               </p>
             </footer>
           </motion.div>

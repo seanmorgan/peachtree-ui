@@ -148,16 +148,7 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
               {/* Footer — fixed */}
               <div className="flex-shrink-0 border-t border-slate-100 dark:border-navy-800 px-5 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
                 <p className="text-xs text-slate-400 dark:text-slate-500">
-                  Data via{' '}
-                  <a
-                    href="https://www.wunderground.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-peachtree-500 hover:text-peachtree-600 dark:text-peachtree-400 transition-colors"
-                  >
-                    Weather Underground
-                  </a>{' '}
-                  · KFTY
+                  The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan. The source code is licensed under the MIT License. Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.
                 </p>
                 <button
                   onClick={onClose}
