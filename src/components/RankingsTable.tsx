@@ -155,7 +155,7 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                   <td className={cn('px-4 py-2.5 text-right tabular-nums text-xs font-bold',
                     row.rank === 1 ? 'text-amber-500' : row.rank <= 3 ? 'text-slate-500' : 'text-slate-300 dark:text-slate-600'
                   )}>
-                    {row.rank === 1 ? '🥇' : row.rank === 2 ? '🥈' : row.rank === 3 ? '🥉' : `#${row.rank}`}
+                    {`#${row.rank}`}
                   </td>
                   <td className={cn('px-4 py-2.5 text-right tabular-nums font-semibold',
                     isSelected ? 'text-peachtree-600 dark:text-peachtree-400' : 'text-slate-700 dark:text-slate-300'
