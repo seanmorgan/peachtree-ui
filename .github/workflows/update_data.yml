@@ -8,11 +8,11 @@ on:
         required: false
         type: string
       start_year:
-        description: "Range start year. Use with end_year."
+        description: "Range start year."
         required: false
         type: string
       end_year:
-        description: "Range end year. Use with start_year."
+        description: "Range end year."
         required: false
         type: string
 
@@ -50,6 +50,8 @@ jobs:
 
           if [ -n "$START_YEAR" ] && [ -n "$END_YEAR" ]; then
             echo "Updating range: $START_YEAR-$END_YEAR"
+            echo "UPDATE_LABEL=$START_YEAR-$END_YEAR" >> "$GITHUB_ENV"
+
             python scripts/update_data.py \
               --start-year "$START_YEAR" \
               --end-year "$END_YEAR" \
@@ -57,6 +59,8 @@ jobs:
 
           elif [ -n "$YEAR" ]; then
             echo "Updating year: $YEAR"
+            echo "UPDATE_LABEL=$YEAR" >> "$GITHUB_ENV"
+
             python scripts/update_data.py \
               --year "$YEAR" \
               --csv public/peachtree-start-conditions.csv
@@ -64,6 +68,8 @@ jobs:
           else
             CURRENT_YEAR="$(date +'%Y')"
             echo "No year supplied. Updating current year: $CURRENT_YEAR"
+            echo "UPDATE_LABEL=$CURRENT_YEAR" >> "$GITHUB_ENV"
+
             python scripts/update_data.py \
               --year "$CURRENT_YEAR" \
               --csv public/peachtree-start-conditions.csv
@@ -79,6 +85,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No CSV changes to commit."
           else
-            git commit -m "Update Peachtree weather data"
+            git commit -m "Update Peachtree weather data for $UPDATE_LABEL"
             git push
           fi
