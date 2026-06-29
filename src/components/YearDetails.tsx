@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { type WeatherRecord, METRIC_CONFIGS } from '../types'
 import { StressBadge } from './StressBadge'
-import { getRankForRecord, getRecordId, getRecordLabel, getOrdinal, getUniqueYearCount } from '../utils/calculations'
+import { getRankForRecord, getRecordId, getRecordLabel, getOrdinal } from '../utils/calculations'
 import { getConditionEmoji } from '../utils/categories'
 
 interface Props {
@@ -88,7 +88,7 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
             {METRIC_CONFIGS.map(m => {
               const val = record[m.key] as number
               const rank = rankings[m.key]
-              const total = getUniqueYearCount(data)
+              const total = data.length
               return (
                 <div
                   key={m.key}

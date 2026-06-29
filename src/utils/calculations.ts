@@ -54,9 +54,9 @@ export function computeHeatIndex(tempF: number, humidityPct: number): number {
 }
 
 // ─── Runner Stress Score ──────────────────────────────────────────────────────
-// Derived from historical data: heatIndex + dewPoint * 1.5
-export function computeRunnerStressScore(heatIndexF: number, dewPointF: number): number {
-  return Math.round((heatIndexF + dewPointF * 1.5) * 10) / 10
+// Derived from historical data: temperatureF + dewPoint * 1.5
+export function computeRunnerStressScore(temperatureF: number, dewPointF: number): number {
+  return Math.round((temperatureF + dewPointF * 1.5) * 10) / 10
 }
 
 // ─── Relative Humidity from Dew Point ────────────────────────────────────────

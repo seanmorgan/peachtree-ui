@@ -3,7 +3,6 @@ import {
   FireIcon,
   SparklesIcon,
   BeakerIcon,
-  BoltIcon,
   TrophyIcon,
   ChartBarIcon,
 } from '@heroicons/react/24/outline'
@@ -30,12 +29,10 @@ export function SummaryCards({ data, selectedId, onSelectId }: Props) {
     const hottest = maxBy('tempF')
     const coolest = minBy('tempF')
     const dewiest = maxBy('dewPointF')
-    const highestHI = maxBy('heatIndexF')
     const highestStress = maxBy('runnerStressScore')
 
     const avgTemp = avg('tempF')
     const avgDew = avg('dewPointF')
-    const avgHI = avg('heatIndexF')
 
     // Year closest to each average
     const closestTo = (field: keyof WeatherRecord, target: number) =>
@@ -68,21 +65,11 @@ export function SummaryCards({ data, selectedId, onSelectId }: Props) {
         title: 'Highest Dew Point',
         year: dewiest.year,
         value: `${dewiest.dewPointF}°F`,
-        subtitle: `Feels-like ${dewiest.heatIndexF}°F`,
+        subtitle: `Humidity ${dewiest.humidityPct}%`,
         icon: <BeakerIcon className="h-5 w-5" />,
         accentColor: '#3b82f6',
         stressScore: dewiest.runnerStressScore,
         record: dewiest,
-      },
-      {
-        title: 'Highest Heat Index',
-        year: highestHI.year,
-        value: `${highestHI.heatIndexF}°F`,
-        subtitle: `${highestHI.humidityPct}% humidity`,
-        icon: <BoltIcon className="h-5 w-5" />,
-        accentColor: '#ef4444',
-        stressScore: highestHI.runnerStressScore,
-        record: highestHI,
       },
       {
         title: 'Highest Stress Score',
@@ -117,16 +104,6 @@ export function SummaryCards({ data, selectedId, onSelectId }: Props) {
         stressScore: undefined,
         record: closestTo('dewPointF', avgDew),
       },
-      {
-        title: 'Avg Heat Index',
-        year: closestTo('heatIndexF', avgHI).year,
-        value: `${avgHI.toFixed(1)}°F`,
-        subtitle: `Typical perceived temp`,
-        icon: <ChartBarIcon className="h-5 w-5" />,
-        accentColor: '#ef4444',
-        stressScore: undefined,
-        record: closestTo('heatIndexF', avgHI),
-      },
     ]
 
     return { extremes, averages }
@@ -135,7 +112,7 @@ export function SummaryCards({ data, selectedId, onSelectId }: Props) {
   return (
     <div className="space-y-4">
       {/* Extremes row */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.extremes.map((card, i) => (
           <MetricCard
             key={card.title}
@@ -154,7 +131,7 @@ export function SummaryCards({ data, selectedId, onSelectId }: Props) {
       </div>
 
       {/* Averages row */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {cards.averages.map((card, i) => (
           <MetricCard
             key={card.title}

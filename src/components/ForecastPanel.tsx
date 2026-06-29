@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { type WeatherRecord, type ForecastData, METRIC_CONFIGS } from '../types'
 import { StressBadge } from './StressBadge'
-import { computeHeatIndex, computeRunnerStressScore, computeHumidityFromDewPoint, getForecastRank, getOrdinal } from '../utils/calculations'
+import { computeRunnerStressScore, computeHumidityFromDewPoint, getForecastRank, getOrdinal } from '../utils/calculations'
 
 interface Props {
   data: WeatherRecord[]
@@ -25,9 +25,8 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
       return
     }
     const humidity = computeHumidityFromDewPoint(temp, dew)
-    const heatIndex = computeHeatIndex(temp, humidity)
-    const stress = computeRunnerStressScore(heatIndex, dew)
-    onForecastChange({ tempF: temp, dewPointF: dew, humidityPct: humidity, heatIndexF: heatIndex, runnerStressScore: stress })
+    const stress = computeRunnerStressScore(temp, dew)
+    onForecastChange({ tempF: temp, dewPointF: dew, humidityPct: humidity, runnerStressScore: stress })
   }, [tempInput, dewInput, onForecastChange])
 
   const rankInfo = forecast
@@ -110,15 +109,10 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
         ) : (
           <>
             {/* Computed outputs */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div className="rounded-xl bg-slate-50 dark:bg-navy-800/50 p-3 text-center">
                 <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">Humidity</p>
                 <p className="text-xl font-bold text-cyan-500">{forecast.humidityPct}%</p>
-                <p className="text-xs text-slate-400 mt-0.5">auto-computed</p>
-              </div>
-              <div className="rounded-xl bg-slate-50 dark:bg-navy-800/50 p-3 text-center">
-                <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">Heat Index</p>
-                <p className="text-xl font-bold text-red-500">{forecast.heatIndexF.toFixed(1)}°F</p>
                 <p className="text-xs text-slate-400 mt-0.5">auto-computed</p>
               </div>
               <div className="col-span-2 rounded-xl bg-slate-50 dark:bg-navy-800/50 p-3 text-center">

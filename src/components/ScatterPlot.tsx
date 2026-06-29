@@ -48,10 +48,6 @@ function ScatterTooltip({ active, payload }: TooltipProps<number, string>) {
           <span className="font-semibold text-slate-900 dark:text-white">{d.humidityPct}%</span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-slate-500 dark:text-slate-400">Heat Index</span>
-          <span className="font-semibold text-slate-900 dark:text-white">{d.heatIndexF}°F</span>
-        </div>
-        <div className="flex justify-between gap-4">
           <span className="text-slate-500 dark:text-slate-400">Stress</span>
           <span className="font-semibold text-slate-900 dark:text-white">{d.runnerStressScore?.toFixed(1)}</span>
         </div>

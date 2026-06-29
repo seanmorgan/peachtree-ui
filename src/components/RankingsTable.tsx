@@ -28,7 +28,6 @@ const COLS: Array<{ field: SortField; label: string; align?: string }> = [
   { field: 'tempF', label: 'Temp' },
   { field: 'dewPointF', label: 'Dew Pt' },
   { field: 'humidityPct', label: 'Humidity' },
-  { field: 'heatIndexF', label: 'Heat Idx' },
   { field: 'runnerStressScore', label: 'Stress' },
   { field: 'windSpeedMph', label: 'Wind' },
   { field: 'condition', label: 'Condition', align: 'left' },
@@ -125,13 +124,12 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                 </td>
                 <td className="px-4 py-2.5 text-right">
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-400">
-                    📍 Forecast
+                    📍
                   </span>
                 </td>
                 <td className="px-4 py-2.5 text-right font-medium text-slate-700 dark:text-slate-300">{forecast.tempF}°</td>
                 <td className="px-4 py-2.5 text-right font-medium text-slate-700 dark:text-slate-300">{forecast.dewPointF}°</td>
                 <td className="px-4 py-2.5 text-right font-medium text-slate-700 dark:text-slate-300">{forecast.humidityPct}%</td>
-                <td className="px-4 py-2.5 text-right font-medium text-slate-700 dark:text-slate-300">{forecast.heatIndexF.toFixed(1)}°</td>
                 <td className="px-4 py-2.5 text-right">
                   <StressBadge score={forecast.runnerStressScore} />
                 </td>
@@ -167,7 +165,6 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                   <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.tempF}°</td>
                   <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.dewPointF}°</td>
                   <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.humidityPct}%</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.heatIndexF}°</td>
                   <td className="px-4 py-2.5 text-right">
                     <StressBadge score={row.runnerStressScore} />
                   </td>

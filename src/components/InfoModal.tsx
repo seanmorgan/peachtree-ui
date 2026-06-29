@@ -121,7 +121,7 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
                       A composite metric designed to capture overall heat stress for runners:
                     </p>
                     <div className="mt-2 mb-2 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-navy-800 px-4 py-2.5 font-mono text-xs sm:text-sm text-slate-800 dark:text-slate-200">
-                      Score = Heat Index + (Dew Point × 1.5)
+                      Score = Temperature + (Dew Point × 1.5)
                     </div>
                     <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Dew point is weighted more heavily because high atmospheric moisture impairs
