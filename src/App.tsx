@@ -206,7 +206,7 @@ export default function App() {
                 </a>{' '}
               </p>
               <p>
-                The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan. The source code is licensed under the MIT License.
+                The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan.
               </p>
               <p>
                 Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.

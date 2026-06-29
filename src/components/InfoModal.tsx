@@ -148,7 +148,7 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
               {/* Footer — fixed */}
               <div className="flex-shrink-0 border-t border-slate-100 dark:border-navy-800 px-5 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
                 <p className="text-xs text-slate-400 dark:text-slate-500">
-                  The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan. The source code is licensed under the MIT License. Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.
+                  The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan. Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.
                 </p>
                 <button
                   onClick={onClose}
