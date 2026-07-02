@@ -121,20 +121,21 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
                       A composite metric designed to capture overall heat stress for runners:
                     </p>
                     <div className="mt-2 mb-2 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-navy-800 px-4 py-2.5 font-mono text-xs sm:text-sm text-slate-800 dark:text-slate-200">
-                      Score = Temperature + (Dew Point × 1.5)
+                      Score = Temp + (Dew Point × 1.5) − (Wind × 0.5, max 10 mph)
                     </div>
                     <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Dew point is weighted more heavily because high atmospheric moisture impairs
-                      the body's ability to cool itself through sweating — the primary driver of
-                      heat-related stress for endurance athletes. A higher score means harder conditions.
+                      the body's ability to cool itself through sweating. Wind provides a small
+                      cooling credit (up to 5 points at 10+ mph) since a breeze aids evaporation.
+                      A higher score means harder conditions.
                     </p>
                     <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2 text-xs">
                       {[
                         { emoji: '🟢', label: 'Comfortable', range: '< 160' },
                         { emoji: '🟡', label: 'Warm', range: '160–170' },
                         { emoji: '🟠', label: 'Hot', range: '170–177' },
-                        { emoji: '🔴', label: 'Brutal', range: '177–183' },
-                        { emoji: '🟣', label: 'Historic', range: '≥ 183' },
+                        { emoji: '🔴', label: 'Brutal', range: '177–181' },
+                        { emoji: '🟣', label: 'Historic', range: '≥ 181' },
                       ].map(c => (
                         <span key={c.label} className="inline-flex items-center gap-1 rounded-full bg-slate-100 dark:bg-navy-800 px-2 py-1 font-medium text-slate-600 dark:text-slate-400">
                           {c.emoji} {c.label} <span className="text-slate-400 dark:text-slate-500 font-normal">({c.range})</span>

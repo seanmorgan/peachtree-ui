@@ -252,8 +252,9 @@ def records_to_start_conditions(records, target_time):
     start["heatIndexF"] = [
         heat_index_f(t, rh) for t, rh in zip(start["tempF"], start["humidityPct"])
     ]
+    wind_credit = start["windSpeedMph"].fillna(0).astype(float).clip(upper=10) * 0.5
     start["runnerStressScore"] = (
-        start["tempF"].astype(float) + start["dewPointF"].astype(float) * 1.5
+        start["tempF"].astype(float) + start["dewPointF"].astype(float) * 1.5 - wind_credit
     ).round(1)
 
     return start[OUTPUT_COLUMNS]

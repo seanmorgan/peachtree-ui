@@ -54,9 +54,11 @@ export function computeHeatIndex(tempF: number, humidityPct: number): number {
 }
 
 // ─── Runner Stress Score ──────────────────────────────────────────────────────
-// Derived from historical data: temperatureF + dewPoint * 1.5
-export function computeRunnerStressScore(temperatureF: number, dewPointF: number): number {
-  return Math.round((temperatureF + dewPointF * 1.5) * 10) / 10
+// Score = Temp + (1.5 × Dew Point) − (0.5 × Wind, capped at 10 mph)
+// Wind capped at 10 mph so max cooling credit is 5 points.
+export function computeRunnerStressScore(tempF: number, dewPointF: number, windSpeedMph = 0): number {
+  const windCredit = Math.min(windSpeedMph, 10) * 0.5
+  return Math.round((tempF + dewPointF * 1.5 - windCredit) * 10) / 10
 }
 
 // ─── Relative Humidity from Dew Point ────────────────────────────────────────

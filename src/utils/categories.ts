@@ -39,7 +39,7 @@ export const STRESS_CATEGORIES: StressCategory[] = [
     text: 'text-red-700 dark:text-red-400',
     border: 'border-red-500/30',
     min: 177,
-    max: 183,
+    max: 181,
   },
   {
     label: 'Historic',
@@ -48,7 +48,7 @@ export const STRESS_CATEGORIES: StressCategory[] = [
     bg: 'bg-purple-500/15 dark:bg-purple-500/20',
     text: 'text-purple-700 dark:text-purple-400',
     border: 'border-purple-500/30',
-    min: 183,
+    min: 181,
     max: Infinity,
   },
 ]

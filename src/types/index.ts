@@ -27,6 +27,8 @@ export interface ForecastData {
   tempF: number
   dewPointF: number
   humidityPct: number
+  heatIndexF: number
+  windSpeedMph: number
   runnerStressScore: number
 }
 

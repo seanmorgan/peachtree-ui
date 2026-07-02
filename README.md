@@ -22,20 +22,20 @@ An interactive, fully client-side dashboard visualizing 40+ years of race-mornin
 ### Runner Stress Categories
 
 | Emoji | Label | Score Range |
-|---|---|---|
-| 🟢 | Comfortable | < 160 |
-| 🟡 | Warm | 160 – 170 |
-| 🟠 | Hot | 170 – 177 |
-| 🔴 | Brutal | 177 – 183 |
-| 🟣 | Historic | ≥ 183 |
+|---|---|-------------|
+| 🟢 | Comfortable | < 160       |
+| 🟡 | Warm | 160 – 170   |
+| 🟠 | Hot | 170 – 177   |
+| 🔴 | Brutal | 177 – 181   |
+| 🟣 | Historic | ≥ 181       |
 
 ### Runner Stress Score Formula
 
 ```
-Stress Score = Heat Index (°F) + Dew Point (°F) × 1.5
+Stress Score = Temp (°F) + (Dew Point (°F) × 1.5) − (Wind Speed (mph, capped at 10) × 0.5)
 ```
 
-Dew point is weighted more heavily because high atmospheric moisture impairs the body's ability to cool through sweating — the primary driver of heat stress for endurance athletes.
+Dew point is weighted more heavily because high atmospheric moisture impairs the body's ability to cool through sweating — the primary driver of heat stress for endurance athletes. Wind provides a small cooling credit (capped at 5 points at 10+ mph) since a breeze aids evaporative cooling.
 
 ---
 

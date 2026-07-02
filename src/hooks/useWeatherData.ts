@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Papa from 'papaparse'
 import { type WeatherRecord } from '../types'
+import { computeRunnerStressScore } from '../utils/calculations'
 
 export function useWeatherData(csvPath: string) {
   const [data, setData] = useState<WeatherRecord[]>([])
@@ -14,6 +15,11 @@ export function useWeatherData(csvPath: string) {
     const onComplete = (results: Papa.ParseResult<WeatherRecord>) => {
       const rows = results.data
         .filter(r => r.year)
+        .map(r => ({
+          ...r,
+          // Always recompute from raw values so the TS formula is the single source of truth
+          runnerStressScore: computeRunnerStressScore(r.tempF, r.dewPointF, r.windSpeedMph ?? 0),
+        }))
         .sort((a, b) => {
           if (a.year !== b.year) return a.year - b.year
           // sub-years ("2021a" before "2021b") sorted alphabetically

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { type WeatherRecord, type ForecastData, METRIC_CONFIGS } from '../types'
 import { StressBadge } from './StressBadge'
-import { computeRunnerStressScore, computeHumidityFromDewPoint, getForecastRank, getOrdinal } from '../utils/calculations'
+import { computeRunnerStressScore, computeHumidityFromDewPoint, getForecastRank, getOrdinal, computeHeatIndex } from '../utils/calculations'
 
 interface Props {
   data: WeatherRecord[]
@@ -15,6 +15,7 @@ interface Props {
 export function ForecastPanel({ data, forecast, showForecast, onForecastChange, onToggleShowForecast }: Props) {
   const [tempInput, setTempInput] = useState('')
   const [dewInput, setDewInput] = useState('')
+  const [windInput, setWindInput] = useState('')
 
   // Recompute whenever inputs change
   useEffect(() => {
@@ -24,10 +25,12 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
       onForecastChange(null)
       return
     }
+    const wind = parseFloat(windInput) || 0
     const humidity = computeHumidityFromDewPoint(temp, dew)
-    const stress = computeRunnerStressScore(temp, dew)
-    onForecastChange({ tempF: temp, dewPointF: dew, humidityPct: humidity, runnerStressScore: stress })
-  }, [tempInput, dewInput, onForecastChange])
+    const heatIndex = computeHeatIndex(temp, humidity)
+    const stress = computeRunnerStressScore(temp, dew, wind)
+    onForecastChange({ tempF: temp, dewPointF: dew, humidityPct: humidity, heatIndexF: heatIndex, windSpeedMph: wind, runnerStressScore: stress })
+  }, [tempInput, dewInput, windInput, onForecastChange])
 
   const rankInfo = forecast
     ? METRIC_CONFIGS.map(m => ({
@@ -70,7 +73,7 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
 
       <div className="p-5 space-y-5">
         {/* Inputs */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">
               Temperature (°F)
@@ -99,6 +102,20 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm placeholder:text-slate-300 focus:border-peachtree-400 focus:outline-none focus:ring-2 focus:ring-peachtree-500/20 dark:border-navy-700 dark:bg-navy-800 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-peachtree-500"
             />
           </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">
+              Wind Speed (mph)
+            </label>
+            <input
+              type="number"
+              value={windInput}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWindInput(e.target.value)}
+              placeholder="0 = calm"
+              min={0}
+              max={30}
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm placeholder:text-slate-300 focus:border-peachtree-400 focus:outline-none focus:ring-2 focus:ring-peachtree-500/20 dark:border-navy-700 dark:bg-navy-800 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-peachtree-500"
+            />
+          </div>
         </div>
 
         {!forecast ? (
@@ -109,10 +126,15 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
         ) : (
           <>
             {/* Computed outputs */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-xl bg-slate-50 dark:bg-navy-800/50 p-3 text-center">
                 <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">Humidity</p>
                 <p className="text-xl font-bold text-cyan-500">{forecast.humidityPct}%</p>
+                <p className="text-xs text-slate-400 mt-0.5">auto-computed</p>
+              </div>
+              <div className="rounded-xl bg-slate-50 dark:bg-navy-800/50 p-3 text-center">
+                <p className="text-xs text-slate-400 dark:text-slate-500 mb-1">Heat Index</p>
+                <p className="text-xl font-bold text-red-500">{forecast.heatIndexF.toFixed(1)}°F</p>
                 <p className="text-xs text-slate-400 mt-0.5">auto-computed</p>
               </div>
               <div className="col-span-2 rounded-xl bg-slate-50 dark:bg-navy-800/50 p-3 text-center">
@@ -156,6 +178,7 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
               onClick={() => {
                 setTempInput('')
                 setDewInput('')
+                setWindInput('')
                 onForecastChange(null)
               }}
               className="w-full rounded-lg border border-slate-200 py-2 text-sm text-slate-400 hover:text-slate-600 hover:border-slate-300 dark:border-navy-700 dark:text-slate-500 dark:hover:border-navy-600 dark:hover:text-slate-400 transition-colors"
@@ -168,6 +191,8 @@ export function ForecastPanel({ data, forecast, showForecast, onForecastChange, 
     </motion.div>
   )
 }
+
+
 
 
 
