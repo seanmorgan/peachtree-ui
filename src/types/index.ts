@@ -46,10 +46,10 @@ export interface MetricConfig {
 }
 
 export const METRIC_CONFIGS: MetricConfig[] = [
-  { key: 'tempF',           label: 'Temperature',        shortLabel: 'Temp',    unit: '°F', color: '#f97316', decimals: 1 },
-  { key: 'dewPointF',       label: 'Dew Point',          shortLabel: 'Dew',     unit: '°F', color: '#3b82f6', decimals: 1 },
-  { key: 'humidityPct',     label: 'Humidity',           shortLabel: 'Humidity',unit: '%',  color: '#06b6d4', decimals: 0 },
-  { key: 'runnerStressScore', label: 'Stress Score',     shortLabel: 'Stress',  unit: '',   color: '#a855f7', decimals: 1 },
+  { key: 'tempF',             label: 'Temperature',  shortLabel: 'Temp',    unit: '°F', color: '#f97316', decimals: 1 },
+  { key: 'dewPointF',         label: 'Dew Point',    shortLabel: 'Dew',     unit: '°F', color: '#3b82f6', decimals: 1 },
+  { key: 'humidityPct',       label: 'Humidity',     shortLabel: 'Humidity',unit: '%',  color: '#06b6d4', decimals: 0 },
+  { key: 'runnerStressScore', label: 'Stress Score', shortLabel: 'Stress',  unit: '',   color: '#a855f7', decimals: 1 },
 ]
 
 export const METRIC_MAP: Record<MetricKey, MetricConfig> = Object.fromEntries(

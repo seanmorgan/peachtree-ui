@@ -167,6 +167,7 @@ export function MainChart({
               tickFormatter={(v: string) => v.replace(/[a-z]$/, '')}
             />
 
+            {/* Primary left axis — temp / dew / humidity / stress */}
             <YAxis
               domain={domain}
               tick={{ fontSize: 11, fill: 'currentColor' }}

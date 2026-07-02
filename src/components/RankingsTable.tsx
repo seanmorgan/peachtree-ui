@@ -133,7 +133,9 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                 <td className="px-4 py-2.5 text-right">
                   <StressBadge score={forecast.runnerStressScore} />
                 </td>
-                <td className="px-4 py-2.5 text-right text-slate-400 dark:text-slate-500">—</td>
+                <td className="px-4 py-2.5 text-right tabular-nums text-slate-500 dark:text-slate-400 text-xs">
+                  {forecast.windSpeedMph === 0 ? 'Calm' : `${forecast.windSpeedMph} mph`}
+                </td>
                 <td className="px-4 py-2.5 text-left text-slate-400 dark:text-slate-500">—</td>
               </tr>
             )}
