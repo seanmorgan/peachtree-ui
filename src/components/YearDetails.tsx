@@ -4,6 +4,7 @@ import { type WeatherRecord, METRIC_CONFIGS } from '../types'
 import { StressBadge } from './StressBadge'
 import { getRankForRecord, getRecordId, getRecordLabel, getOrdinal } from '../utils/calculations'
 import { getConditionEmoji } from '../utils/categories'
+import {SHIRT_COLORS} from "../utils/shirtColors.ts";
 
 interface Props {
   data: WeatherRecord[]
@@ -70,7 +71,12 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
       ) : (
         <div className="p-5 space-y-5">
           {/* Year badge + condition */}
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-4 flex-wrap">
+            <span
+                title={`${record.year} shirt: ${SHIRT_COLORS[record.year].name}`}
+                className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-300/60"
+                style={{ backgroundColor: SHIRT_COLORS[record.year].hex }}
+            />
             <span className="text-3xl font-bold text-slate-900">{getRecordLabel(record)}</span>
             <StressBadge score={record.runnerStressScore} size="lg" />
             <span className="text-sm text-slate-500">

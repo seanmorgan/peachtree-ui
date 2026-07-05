@@ -11,6 +11,7 @@ import { RankingsTable } from './components/RankingsTable'
 import { ScatterPlot } from './components/ScatterPlot'
 import { YearDetails } from './components/YearDetails'
 import { ForecastPanel } from './components/ForecastPanel'
+import { ShirtColorPieChart } from './components/ShirtColorPieChart'
 import { InfoModal } from './components/InfoModal'
 
 /** Returns true when hex color has enough luminance for dark text to be readable on top. */
@@ -208,6 +209,9 @@ export default function App() {
               onForecastChange={setForecast}
               onToggleShowForecast={() => setShowForecast(p => !p)}
             />
+
+            {/* Shirt color distribution */}
+            <ShirtColorPieChart />
 
             {/* Footer */}
             <footer
