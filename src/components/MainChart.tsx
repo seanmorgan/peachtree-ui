@@ -22,13 +22,12 @@ import { getRecordId, getRecordLabel } from '../utils/calculations'
 function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload as WeatherRecord & { isForecast?: boolean }
-
   const cat = getStressCategory(d.runnerStressScore ?? 0)
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-navy-700 dark:bg-navy-900/95 min-w-[180px]">
+    <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur min-w-[180px]">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <span className="text-sm font-bold text-slate-900 dark:text-white">
+        <span className="text-sm font-bold text-slate-900">
           {d.isForecast ? '📍 Forecast' : `${label}`}
         </span>
         {d.runnerStressScore && (
@@ -43,18 +42,18 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
       <div className="space-y-1">
         {payload.map(p => (
           <div key={p.dataKey} className="flex items-center justify-between gap-4 text-xs">
-            <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            <span className="flex items-center gap-1.5 text-slate-500">
               <span className="h-2 w-2 rounded-full" style={{ background: p.color }} />
               {METRIC_MAP[p.dataKey as MetricKey]?.label ?? p.dataKey}
             </span>
-            <span className="font-semibold text-slate-900 dark:text-white">
+            <span className="font-semibold text-slate-900">
               {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}
               {METRIC_MAP[p.dataKey as MetricKey]?.unit}
             </span>
           </div>
         ))}
         {d.condition && (
-          <div className="mt-1.5 border-t border-slate-100 pt-1.5 text-xs text-slate-400 dark:border-navy-700 dark:text-slate-500">
+          <div className="mt-1.5 border-t border-slate-100 pt-1.5 text-xs text-slate-400">
             {getConditionEmoji(d.condition)} {d.condition}
             {d.wind && d.wind !== 'CALM' && ` · ${d.wind} ${d.windSpeedMph} mph`}
           </div>
@@ -118,15 +117,15 @@ export function MainChart({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="rounded-2xl border border-slate-200 bg-white dark:border-navy-800 dark:bg-navy-900 shadow-sm"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
       {/* Header */}
-      <div className="flex flex-col gap-3 border-b border-slate-100 dark:border-navy-800 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+          <h2 className="text-base font-semibold text-slate-900">
             Historical Conditions
           </h2>
-          <p className="text-xs text-slate-400 dark:text-slate-500">
+          <p className="text-xs text-slate-400">
             7:00 AM race start{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
           </p>
         </div>
@@ -153,14 +152,14 @@ export function MainChart({
             <CartesianGrid
               strokeDasharray="3 3"
               stroke="currentColor"
-              className="text-slate-100 dark:text-slate-800"
+              className="text-slate-100"
               vertical={false}
             />
 
             <XAxis
               dataKey="displayId"
               tick={{ fontSize: 11, fill: 'currentColor' }}
-              className="text-slate-400 dark:text-slate-500"
+              className="text-slate-400"
               tickLine={false}
               axisLine={false}
               interval={4}
@@ -171,7 +170,7 @@ export function MainChart({
             <YAxis
               domain={domain}
               tick={{ fontSize: 11, fill: 'currentColor' }}
-              className="text-slate-400 dark:text-slate-500"
+              className="text-slate-400"
               tickLine={false}
               axisLine={false}
               width={38}
@@ -252,5 +251,3 @@ export function MainChart({
     </motion.div>
   )
 }
-
-

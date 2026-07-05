@@ -6,6 +6,7 @@ import { StressBadge } from './StressBadge'
 import { getRankedData, getRecordId, getRecordLabel } from '../utils/calculations'
 import { getConditionEmoji } from '../utils/categories'
 import { cn } from '../utils/cn'
+import {SHIRT_COLORS} from '../utils/shirtColors'
 
 interface Props {
   data: WeatherRecord[]
@@ -25,6 +26,7 @@ function SortIcon({ field, sortField, sortDir }: { field: SortField; sortField: 
 const COLS: Array<{ field: SortField; label: string; align?: string }> = [
   { field: 'rank', label: '#' },
   { field: 'year', label: 'Year' },
+  { field: 'shirt', label: 'Shirt', align: 'center' },
   { field: 'tempF', label: 'Temp' },
   { field: 'dewPointF', label: 'Dew Pt' },
   { field: 'humidityPct', label: 'Humidity' },
@@ -42,16 +44,28 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
   const sorted = useMemo(() => {
     const base = [...rankedData]
     base.sort((a, b) => {
+      let cmp: number
       if (sortField === 'rank') {
         return sortDir === 'asc' ? a.rank - b.rank : b.rank - a.rank
       }
-      const av = a[sortField as keyof typeof a] as number | string
-      const bv = b[sortField as keyof typeof b] as number | string
-      let cmp: number
-      if (typeof av === 'string' && typeof bv === 'string') {
-        cmp = av.localeCompare(bv)
+      if (sortField === 'shirt') {
+        const aColor = SHIRT_COLORS[a.year]
+        const bColor = SHIRT_COLORS[b.year]
+
+        const aSort = aColor?.displayHueOrder ?? 9999
+        const bSort = bColor?.displayHueOrder ?? 9999
+
+        cmp =
+            aSort - bSort ||
+            a.year - b.year
       } else {
-        cmp = (av as number) - (bv as number)
+        const av = a[sortField as keyof typeof a] as number | string
+        const bv = b[sortField as keyof typeof b] as number | string
+        if (typeof av === 'string' && typeof bv === 'string') {
+          cmp = av.localeCompare(bv)
+        } else {
+          cmp = (av as number) - (bv as number)
+        }
       }
       // Tiebreaker: sub-years stay chronological within the same year
       if (cmp === 0) cmp = (a.subYear || '').localeCompare(b.subYear || '')
@@ -65,7 +79,7 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
       setSortDir(d => (d === 'asc' ? 'desc' : 'asc'))
     } else {
       setSortField(field)
-      setSortDir(field === 'condition' || field === 'year' ? 'asc' : 'desc')
+      setSortDir(field === 'condition' || field === 'year' || field === 'shirt' ? 'asc' : 'desc')
     }
   }
 
@@ -81,13 +95,13 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15 }}
-      className="rounded-2xl border border-slate-200 bg-white dark:border-navy-800 dark:bg-navy-900 shadow-sm overflow-hidden"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden"
     >
-      <div className="border-b border-slate-100 dark:border-navy-800 px-5 py-4">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+      <div className="border-b border-slate-100 px-5 py-4">
+        <h2 className="text-base font-semibold text-slate-900">
           Historical Rankings
         </h2>
-        <p className="text-xs text-slate-400 dark:text-slate-500">
+        <p className="text-xs text-slate-400">
           Click a row to explore that year · Sorted by worst conditions first
         </p>
       </div>
@@ -95,15 +109,15 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
       <div className="overflow-x-auto">
         <table className="w-full min-w-[700px] text-sm">
           <thead>
-            <tr className="border-b border-slate-100 dark:border-navy-800">
+            <tr className="border-b border-slate-100">
               {COLS.map(col => (
                 <th
                   key={col.field}
                   onClick={() => handleSort(col.field)}
                   className={cn(
-                    'cursor-pointer select-none whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500',
-                    col.align === 'left' ? 'text-left' : 'text-right',
-                    'hover:text-slate-600 dark:hover:text-slate-300 transition-colors',
+                    'cursor-pointer select-none whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-400',
+                    col.align === 'left' ? 'text-left' : col.align === 'center' ? 'text-center' : 'text-right',
+                    'hover:text-slate-600 transition-colors',
                   )}
                 >
                   <span className="inline-flex items-center gap-1">
@@ -115,28 +129,30 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
+          <tbody className="divide-y divide-slate-50">
             {/* Forecast row */}
             {forecast && showForecast && (
-              <tr className="bg-amber-50/70 dark:bg-amber-500/10">
-                <td className="px-4 py-2.5 text-right font-bold text-amber-600 dark:text-amber-400 text-xs">
+              <tr className="bg-amber-50/70">
+                <td className="px-4 py-2.5 text-right font-bold text-amber-600 text-xs">
                   #{forecastRank}
                 </td>
                 <td className="px-4 py-2.5 text-right">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-400">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
                     📍
                   </span>
                 </td>
-                <td className="px-4 py-2.5 text-right font-medium text-slate-700 dark:text-slate-300">{forecast.tempF}°</td>
-                <td className="px-4 py-2.5 text-right font-medium text-slate-700 dark:text-slate-300">{forecast.dewPointF}°</td>
-                <td className="px-4 py-2.5 text-right font-medium text-slate-700 dark:text-slate-300">{forecast.humidityPct}%</td>
+                {/* No shirt color for forecast */}
+                <td className="px-4 py-2.5 text-center text-slate-300 text-xs">—</td>
+                <td className="px-4 py-2.5 text-right font-medium text-slate-700">{forecast.tempF}°</td>
+                <td className="px-4 py-2.5 text-right font-medium text-slate-700">{forecast.dewPointF}°</td>
+                <td className="px-4 py-2.5 text-right font-medium text-slate-700">{forecast.humidityPct}%</td>
                 <td className="px-4 py-2.5 text-right">
                   <StressBadge score={forecast.runnerStressScore} />
                 </td>
-                <td className="px-4 py-2.5 text-right tabular-nums text-slate-500 dark:text-slate-400 text-xs">
+                <td className="px-4 py-2.5 text-right tabular-nums text-slate-500 text-xs">
                   {forecast.windSpeedMph === 0 ? 'Calm' : `${forecast.windSpeedMph} mph`}
                 </td>
-                <td className="px-4 py-2.5 text-left text-slate-400 dark:text-slate-500">—</td>
+                <td className="px-4 py-2.5 text-left text-slate-400">—</td>
               </tr>
             )}
 
@@ -150,32 +166,44 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                   className={cn(
                     'cursor-pointer transition-colors duration-100',
                     isSelected
-                      ? 'bg-peachtree-50 dark:bg-peachtree-500/10 ring-1 ring-inset ring-peachtree-200 dark:ring-peachtree-500/30'
-                      : 'hover:bg-slate-50 dark:hover:bg-slate-800/50',
+                      ? 'bg-peachtree-50 ring-1 ring-inset ring-peachtree-200'
+                      : 'hover:bg-slate-50',
                   )}
                 >
                   <td className={cn('px-4 py-2.5 text-right tabular-nums text-xs font-bold',
-                    row.rank === 1 ? 'text-amber-500' : row.rank <= 3 ? 'text-slate-500' : 'text-slate-300 dark:text-slate-600'
+                    row.rank === 1 ? 'text-amber-500' : row.rank <= 3 ? 'text-slate-500' : 'text-slate-300'
                   )}>
                     {`#${row.rank}`}
                   </td>
                   <td className={cn('px-4 py-2.5 text-right tabular-nums font-semibold',
-                    isSelected ? 'text-peachtree-600 dark:text-peachtree-400' : 'text-slate-700 dark:text-slate-300'
+                    isSelected ? 'text-peachtree-600' : 'text-slate-700'
                   )}>
                     {getRecordLabel(row)}
                   </td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.tempF}°</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.dewPointF}°</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">{row.humidityPct}%</td>
+                  {/* Shirt color swatch */}
+                  <td className="px-4 py-2.5 text-center">
+                    {SHIRT_COLORS[row.year] ? (
+                      <span
+                        title={`${row.year} shirt: ${SHIRT_COLORS[row.year].name}`}
+                        className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-300/60"
+                        style={{ backgroundColor: SHIRT_COLORS[row.year].hex }}
+                      />
+                    ) : (
+                      <span className="text-slate-300 text-xs">—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-600">{row.tempF}°</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-600">{row.dewPointF}°</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-600">{row.humidityPct}%</td>
                   <td className="px-4 py-2.5 text-right">
                     <StressBadge score={row.runnerStressScore} />
                   </td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-500 dark:text-slate-400 text-xs">
+                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-500 text-xs">
                     {row.wind === 'CALM' || row.windSpeedMph === 0
                       ? 'Calm'
                       : `${row.wind} ${row.windSpeedMph}`}
                   </td>
-                  <td className="px-4 py-2.5 text-left text-slate-500 dark:text-slate-400 text-xs">
+                  <td className="px-4 py-2.5 text-left text-slate-500 text-xs">
                     {getConditionEmoji(row.condition)} {row.condition}
                   </td>
                 </tr>
@@ -187,4 +215,3 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
     </motion.div>
   )
 }
-

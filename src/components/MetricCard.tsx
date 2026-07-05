@@ -34,12 +34,12 @@ export function MetricCard({
       transition={{ duration: 0.4, delay, ease: 'easeOut' }}
       onClick={onClick}
       className={cn(
-        'relative overflow-hidden rounded-2xl border bg-white dark:bg-navy-900 p-5',
+        'relative overflow-hidden rounded-2xl border bg-white p-5',
         'transition-all duration-200',
         onClick && 'cursor-pointer hover:scale-[1.02] active:scale-[0.99]',
         selected
-          ? 'ring-2 ring-peachtree-500 border-peachtree-300 dark:border-peachtree-700 shadow-lg shadow-peachtree-500/10'
-          : 'border-slate-200 dark:border-navy-700 shadow-sm hover:shadow-md',
+          ? 'ring-2 ring-peachtree-500 border-peachtree-300 shadow-lg shadow-peachtree-500/10'
+          : 'border-slate-200 shadow-sm hover:shadow-md',
       )}
     >
       {/* Accent gradient blob */}
@@ -61,22 +61,21 @@ export function MetricCard({
           )}
         </div>
 
-        <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+        <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
           {title}
         </p>
 
         <div className="mt-1 flex items-end gap-2">
-          <p className="text-3xl font-bold text-slate-900 dark:text-white">{value}</p>
-          <p className="mb-0.5 text-sm font-medium text-slate-500 dark:text-slate-400">
+          <p className="text-3xl font-bold text-slate-900">{value}</p>
+          <p className="mb-0.5 text-sm font-medium text-slate-500">
             {year}
           </p>
         </div>
 
         {subtitle && (
-          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{subtitle}</p>
+          <p className="mt-1 text-xs text-slate-400">{subtitle}</p>
         )}
       </div>
     </motion.div>
   )
 }
-

@@ -74,6 +74,7 @@ export interface StressCategory {
 export type SortField =
   | 'rank'
   | 'year'
+  | 'shirt'
   | 'tempF'
   | 'dewPointF'
   | 'humidityPct'

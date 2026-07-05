@@ -1,10 +1,10 @@
 import { useState, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { MoonIcon, SunIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { type MetricKey, type ForecastData } from './types'
 import { getUniqueYearCount } from './utils/calculations'
+import { SHIRT_COLORS } from './utils/shirtColors'
 import { useWeatherData } from './hooks/useWeatherData'
-import { useDarkMode } from './hooks/useDarkMode'
 import { SummaryCards } from './components/SummaryCards'
 import { MainChart } from './components/MainChart'
 import { RankingsTable } from './components/RankingsTable'
@@ -13,9 +13,18 @@ import { YearDetails } from './components/YearDetails'
 import { ForecastPanel } from './components/ForecastPanel'
 import { InfoModal } from './components/InfoModal'
 
+/** Returns true when hex color has enough luminance for dark text to be readable on top. */
+function isLightColor(hex: string): boolean {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return 0.299 * r + 0.587 * g + 0.114 * b > 140
+}
+
+const DEFAULT_BG = '#f8fafc' // Tailwind slate-50
+
 export default function App() {
   const { data, loading, error } = useWeatherData('/peachtree-start-conditions.csv')
-  const [isDark, toggleDark] = useDarkMode()
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeMetrics, setActiveMetrics] = useState<MetricKey[]>(['tempF', 'dewPointF'])
@@ -35,13 +44,30 @@ export default function App() {
     setSelectedId(prev => (prev === id ? null : id))
   }, [])
 
-  // data is pre-sorted ascending by year from useWeatherData
   const yearRange = useMemo(() => (
     data.length ? { min: data[0].year, max: data[data.length - 1].year } : null
   ), [data])
 
+  // Shirt color background: use exact shirt hex when a year is selected, default slate-50 otherwise
+  const bgColor = useMemo(() => {
+    if (selectedId) {
+      const shirt = SHIRT_COLORS[parseInt(selectedId, 10)]
+      if (shirt) return shirt.hex
+    }
+    return DEFAULT_BG
+  }, [selectedId])
+
+  // Whether the current background is light enough for dark text
+  const isLightBg = useMemo(() => isLightColor(bgColor), [bgColor])
+
+  const TITLE_COLOR    = isLightBg ? '#0f172a' : '#ffffff'            // slate-900 or white
+  const SUBTITLE_COLOR = isLightBg ? '#64748b' : 'rgba(255,255,255,0.75)' // slate-500 or soft white
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-navy-950">
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: bgColor, transition: 'background-color 800ms ease-in-out' }}
+    >
       <InfoModal open={showInfo} onClose={() => setShowInfo(false)} yearRange={yearRange ?? undefined} />
 
       {/* ── Header ── */}
@@ -89,15 +115,6 @@ export default function App() {
               >
                 <InformationCircleIcon className="h-4 w-4" />
               </button>
-
-              {/* Dark mode toggle */}
-              <button
-                onClick={toggleDark}
-                className="rounded-lg border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
-                aria-label="Toggle dark mode"
-              >
-                {isDark ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
-              </button>
             </div>
           </div>
         </div>
@@ -113,14 +130,14 @@ export default function App() {
               transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}
               className="h-10 w-10 rounded-full border-4 border-peachtree-500 border-t-transparent"
             />
-            <p className="text-sm text-slate-400 dark:text-slate-500">Loading weather history…</p>
+            <p className="text-sm text-slate-400">Loading weather history…</p>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 dark:border-red-800/40 dark:bg-red-900/20 p-6 text-center">
-            <p className="text-red-600 dark:text-red-400 font-medium">Failed to load data: {error}</p>
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
+            <p className="text-red-600 font-medium">Failed to load data: {error}</p>
             <p className="text-xs text-red-400 mt-1">Please check the console for details.</p>
           </div>
         )}
@@ -134,20 +151,22 @@ export default function App() {
           >
             {/* Page title */}
             <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              <h2
+                className="text-2xl font-bold"
+                style={{ color: TITLE_COLOR, transition: 'color 800ms ease-in-out' }}
+              >
                 Race Start Conditions
               </h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+              <p
+                className="text-sm mt-1"
+                style={{ color: SUBTITLE_COLOR, transition: 'color 800ms ease-in-out' }}
+              >
                 {getUniqueYearCount(data)} years of race-morning weather data{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''} · Closest observation to 7:00 AM start
               </p>
             </div>
 
             {/* Summary Cards */}
-            <SummaryCards
-              data={data}
-              selectedId={selectedId}
-              onSelectId={handleSelectId}
-            />
+            <SummaryCards data={data} selectedId={selectedId} onSelectId={handleSelectId} />
 
             {/* Main Chart */}
             <MainChart
@@ -178,11 +197,7 @@ export default function App() {
                 forecast={forecast}
                 showForecast={showForecast}
               />
-              <YearDetails
-                data={data}
-                selectedId={selectedId}
-                onSelectId={handleSelectId}
-              />
+              <YearDetails data={data} selectedId={selectedId} onSelectId={handleSelectId} />
             </div>
 
             {/* Forecast panel */}
@@ -195,25 +210,18 @@ export default function App() {
             />
 
             {/* Footer */}
-            <footer className="border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-xs text-slate-400 dark:text-slate-600">
+            <footer
+              className="border-t border-slate-200 pt-6 text-center text-xs"
+              style={{ color: SUBTITLE_COLOR, transition: 'color 800ms ease-in-out' }}
+            >
               <p>
                 Created by Sean Morgan • {' '}
-                <a href="https://github.com/seanmorgan/peachtree-ui" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
-                  GitHub
-                </a>{' '} • {' '}
-                <a href="mailto:websean.com@gmail.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
-                  Feedback
-                </a>{' '}
+                <a href="https://github.com/seanmorgan/peachtree-ui" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">GitHub</a>{' '} • {' '}
+                <a href="mailto:websean.com@gmail.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">Feedback</a>{' '}
               </p>
-              <p>
-                The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan.
-              </p>
-              <p>
-                Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.
-              </p>
-              <p>
-                This website is an independent project and is not affiliated with or endorsed by the Atlanta Track Club, the Peachtree Road Race, or Weather Underground.
-              </p>
+              <p>The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan.</p>
+              <p>Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.</p>
+              <p>This website is an independent project and is not affiliated with or endorsed by the Atlanta Track Club, the Peachtree Road Race, or Weather Underground.</p>
             </footer>
           </motion.div>
         )}

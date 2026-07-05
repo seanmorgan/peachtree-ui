@@ -40,22 +40,21 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
               max-h-[88dvh] sm:max-h-[min(90vh,680px)] sm:max-w-lg
               rounded-t-2xl sm:rounded-2xl
               border border-slate-200 bg-white shadow-2xl
-              dark:border-navy-700 dark:bg-navy-900
             ">
               {/* Drag handle (mobile only) */}
               <div className="flex justify-center pt-3 pb-1 sm:hidden flex-shrink-0">
-                <div className="h-1 w-10 rounded-full bg-slate-300 dark:bg-navy-600" />
+                <div className="h-1 w-10 rounded-full bg-slate-300" />
               </div>
 
               {/* Header — fixed */}
-              <div className="flex-shrink-0 flex items-center justify-between border-b border-slate-100 dark:border-navy-800 px-5 py-3 sm:px-6 sm:py-4">
+              <div className="flex-shrink-0 flex items-center justify-between border-b border-slate-100 px-5 py-3 sm:px-6 sm:py-4">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">ℹ️</span>
-                  <h2 className="text-base font-bold text-slate-900 dark:text-white">About</h2>
+                  <h2 className="text-base font-bold text-slate-900">About</h2>
                 </div>
                 <button
                   onClick={onClose}
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-navy-800 dark:hover:text-slate-300 transition-colors"
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
                   aria-label="Close"
                 >
                   <XMarkIcon className="h-5 w-5" />
@@ -63,25 +62,25 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
               </div>
 
               {/* Body — scrollable */}
-              <div className="flex-1 overflow-y-auto overscroll-contain divide-y divide-slate-100 dark:divide-navy-800 px-5 sm:px-6">
+              <div className="flex-1 overflow-y-auto overscroll-contain divide-y divide-slate-100 px-5 sm:px-6">
 
                 {/* Section 1 – Race start time */}
                 <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
-                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-peachtree-50 dark:bg-peachtree-500/10 text-peachtree-600 dark:text-peachtree-400">
+                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-peachtree-50 text-peachtree-600">
                     <ClockIcon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
+                    <h3 className="text-sm font-semibold text-slate-900 mb-1">
                       Why 7:00 AM?
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <p className="text-sm text-slate-500 leading-relaxed">
                       The Peachtree Road Race has started at different times throughout its history — as late as{' '}
-                      <span className="font-medium text-slate-700 dark:text-slate-300">10:00 AM in 1970</span>.
+                      <span className="font-medium text-slate-700">10:00 AM in 1970</span>.
                       Over the years, the start time was moved progressively earlier to beat the heat.
                     </p>
-                    <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <p className="mt-2 text-sm text-slate-500 leading-relaxed">
                       To enable fair year-over-year comparison, this dashboard uses the weather observation{' '}
-                      <span className="font-medium text-slate-700 dark:text-slate-300">closest to 7:00 AM</span>{' '}
+                      <span className="font-medium text-slate-700">closest to 7:00 AM</span>{' '}
                       for every year, regardless of the actual start time that year.
                     </p>
                   </div>
@@ -89,19 +88,19 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
 
                 {/* Section 2 – Data coverage */}
                 <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
-                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-navy-50 dark:bg-navy-700/40 text-navy-600 dark:text-navy-300">
+                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-navy-50 text-navy-600">
                     <CalendarDaysIcon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
+                    <h3 className="text-sm font-semibold text-slate-900 mb-1">
                       Data starts in {yearRange?.min ?? 1982}
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <p className="text-sm text-slate-500 leading-relaxed">
                       The Peachtree Road Race began on{' '}
-                      <span className="font-medium text-slate-700 dark:text-slate-300">July 4, 1970</span>,
+                      <span className="font-medium text-slate-700">July 4, 1970</span>,
                       but granular hourly weather observations at Fulton County Airport (KFTY) are not
                       reliably available before {yearRange?.min ?? 1982}. This dashboard therefore covers{' '}
-                      <span className="font-medium text-slate-700 dark:text-slate-300">
+                      <span className="font-medium text-slate-700">
                         {yearRange ? `${yearRange.min}–${yearRange.max}` : '1982–2025'}.
                       </span>{' '}
                     </p>
@@ -110,20 +109,20 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
 
                 {/* Section 3 – Stress Score */}
                 <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
-                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
                     <CalculatorIcon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
+                    <h3 className="text-sm font-semibold text-slate-900 mb-1">
                       What is the Runner Stress Score?
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <p className="text-sm text-slate-500 leading-relaxed">
                       A composite metric designed to capture overall heat stress for runners:
                     </p>
-                    <div className="mt-2 mb-2 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-navy-800 px-4 py-2.5 font-mono text-xs sm:text-sm text-slate-800 dark:text-slate-200">
+                    <div className="mt-2 mb-2 flex items-center justify-center rounded-lg bg-slate-50 px-4 py-2.5 font-mono text-xs sm:text-sm text-slate-800">
                       Score = Temp + (Dew Point × 1.5) − (Wind × 0.5, max 10 mph)
                     </div>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <p className="text-sm text-slate-500 leading-relaxed">
                       Dew point is weighted more heavily because high atmospheric moisture impairs
                       the body's ability to cool itself through sweating. Wind provides a small
                       cooling credit (up to 5 points at 10+ mph) since a breeze aids evaporation.
@@ -137,8 +136,8 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
                         { emoji: '🔴', label: 'Brutal', range: '177–181' },
                         { emoji: '🟣', label: 'Historic', range: '≥ 181' },
                       ].map(c => (
-                        <span key={c.label} className="inline-flex items-center gap-1 rounded-full bg-slate-100 dark:bg-navy-800 px-2 py-1 font-medium text-slate-600 dark:text-slate-400">
-                          {c.emoji} {c.label} <span className="text-slate-400 dark:text-slate-500 font-normal">({c.range})</span>
+                        <span key={c.label} className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 font-medium text-slate-600">
+                          {c.emoji} {c.label} <span className="text-slate-400 font-normal">({c.range})</span>
                         </span>
                       ))}
                     </div>
@@ -147,13 +146,13 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
               </div>
 
               {/* Footer — fixed */}
-              <div className="flex-shrink-0 border-t border-slate-100 dark:border-navy-800 px-5 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
-                <p className="text-xs text-slate-400 dark:text-slate-500">
+              <div className="flex-shrink-0 border-t border-slate-100 px-5 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
+                <p className="text-xs text-slate-400">
                   The website, source code, compiled dataset, and derived metrics were created and are maintained by Sean Morgan. Historical weather observations were obtained from publicly available Weather Underground historical records and processed into a race-start dataset.
                 </p>
                 <button
                   onClick={onClose}
-                  className="rounded-lg border border-slate-200 dark:border-navy-700 px-4 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-colors"
+                  className="rounded-lg border border-slate-200 px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
                 >
                   Close
                 </button>

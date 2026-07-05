@@ -22,9 +22,9 @@ function ScatterTooltip({ active, payload }: TooltipProps<number, string>) {
   const cat = getStressCategory(d.runnerStressScore ?? 0)
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-navy-700 dark:bg-navy-900/95 min-w-[160px]">
+    <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur min-w-[160px]">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <span className="text-sm font-bold text-slate-900 dark:text-white">
+        <span className="text-sm font-bold text-slate-900">
           {d.isForecast ? '📍 Forecast' : getRecordLabel(d)}
         </span>
         <span
@@ -36,23 +36,23 @@ function ScatterTooltip({ active, payload }: TooltipProps<number, string>) {
       </div>
       <div className="space-y-1 text-xs">
         <div className="flex justify-between gap-4">
-          <span className="text-slate-500 dark:text-slate-400">Temp</span>
-          <span className="font-semibold text-slate-900 dark:text-white">{d.tempF}°F</span>
+          <span className="text-slate-500">Temp</span>
+          <span className="font-semibold text-slate-900">{d.tempF}°F</span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-slate-500 dark:text-slate-400">Dew Point</span>
-          <span className="font-semibold text-slate-900 dark:text-white">{d.dewPointF}°F</span>
+          <span className="text-slate-500">Dew Point</span>
+          <span className="font-semibold text-slate-900">{d.dewPointF}°F</span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-slate-500 dark:text-slate-400">Humidity</span>
-          <span className="font-semibold text-slate-900 dark:text-white">{d.humidityPct}%</span>
+          <span className="text-slate-500">Humidity</span>
+          <span className="font-semibold text-slate-900">{d.humidityPct}%</span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-slate-500 dark:text-slate-400">Stress</span>
-          <span className="font-semibold text-slate-900 dark:text-white">{d.runnerStressScore?.toFixed(1)}</span>
+          <span className="text-slate-500">Stress</span>
+          <span className="font-semibold text-slate-900">{d.runnerStressScore?.toFixed(1)}</span>
         </div>
         {d.condition && (
-          <div className="mt-1 border-t border-slate-100 pt-1 text-slate-400 dark:border-navy-700 dark:text-slate-500">
+          <div className="mt-1 border-t border-slate-100 pt-1 text-slate-400">
             {getConditionEmoji(d.condition)} {d.condition}
           </div>
         )}
@@ -140,13 +140,13 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="rounded-2xl border border-slate-200 bg-white dark:border-navy-800 dark:bg-navy-900 shadow-sm"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
-      <div className="border-b border-slate-100 dark:border-navy-800 px-5 py-4">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+      <div className="border-b border-slate-100 px-5 py-4">
+        <h2 className="text-base font-semibold text-slate-900">
           Temperature vs. Dew Point
         </h2>
-        <p className="text-xs text-slate-400 dark:text-slate-500">
+        <p className="text-xs text-slate-400">
           Upper-right = most brutal · Color = runner stress · Click any point to explore
         </p>
       </div>
@@ -157,7 +157,7 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
             <CartesianGrid
               strokeDasharray="3 3"
               stroke="currentColor"
-              className="text-slate-100 dark:text-slate-800"
+              className="text-slate-100"
             />
             <XAxis
               dataKey="tempF"
@@ -165,10 +165,10 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
               name="Temperature"
               domain={['auto', 'auto']}
               tick={{ fontSize: 11, fill: 'currentColor' }}
-              className="text-slate-400 dark:text-slate-500"
+              className="text-slate-400"
               tickLine={false}
               axisLine={false}
-              label={{ value: 'Temperature (°F)', position: 'insideBottom', offset: -4, fontSize: 11, fill: 'currentColor', className: 'text-slate-400 dark:text-slate-500' }}
+              label={{ value: 'Temperature (°F)', position: 'insideBottom', offset: -4, fontSize: 11, fill: 'currentColor', className: 'text-slate-400' }}
             />
             <YAxis
               dataKey="dewPointF"
@@ -176,7 +176,7 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
               name="Dew Point"
               domain={['auto', 'auto']}
               tick={{ fontSize: 11, fill: 'currentColor' }}
-              className="text-slate-400 dark:text-slate-500"
+              className="text-slate-400"
               tickLine={false}
               axisLine={false}
               width={38}
@@ -190,14 +190,14 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
               stroke="currentColor"
               strokeDasharray="4 4"
               strokeWidth={1}
-              className="text-slate-200 dark:text-slate-700"
+              className="text-slate-200"
             />
             <ReferenceLine
               y={avgDew}
               stroke="currentColor"
               strokeDasharray="4 4"
               strokeWidth={1}
-              className="text-slate-200 dark:text-slate-700"
+              className="text-slate-200"
             />
 
             {/* Historical data */}
@@ -247,14 +247,14 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
         {['Comfortable', 'Warm', 'Hot', 'Brutal', 'Historic'].map((label, i) => {
           const colors = ['#22c55e', '#eab308', '#f97316', '#ef4444', '#a855f7']
           return (
-            <span key={label} className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <span key={label} className="flex items-center gap-1.5 text-xs text-slate-500">
               <span className="h-2.5 w-2.5 rounded-full" style={{ background: colors[i] }} />
               {label}
             </span>
           )
         })}
         {showForecast && forecast && (
-          <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 ml-2">
+          <span className="flex items-center gap-1.5 text-xs text-slate-500 ml-2">
             <span className="h-2.5 w-2.5 rotate-45 inline-block" style={{ background: '#f59e0b' }} />
             📍 Forecast
           </span>
@@ -263,4 +263,3 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
     </motion.div>
   )
 }
-
