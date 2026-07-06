@@ -172,10 +172,11 @@ export function ShirtColorPieChart() {
       {/* Header */}
       <div className="border-b border-slate-100 px-5 py-4">
         <h2 className="text-base font-semibold text-slate-900">
-          👕 T-Shirt Color Distribution
+          👕 Finisher T-Shirt Color Distribution
         </h2>
         <p className="text-xs text-slate-400 mt-0.5">
-          Color-family breakdown across all {totalYears} race years (there was no finisher shirt in 1970!)
+          Color-family breakdown across all 56 race years (there was no finisher shirt in 1970!).
+          Early ringer shirts are shown with colored outlines.
         </p>
       </div>
 
@@ -256,9 +257,14 @@ export function ShirtColorPieChart() {
                   className="flex flex-col items-center gap-0.5"
                 >
                   <span
-                    className="h-6 w-6 rounded-full border border-black/10 shadow-sm"
-                    style={{ background: info.hex }}
+                      className="h-6 w-6 rounded-full border shadow-sm"
+                      style={{
+                        backgroundColor: info.hex,
+                        borderColor: info.ringerHex ?? 'rgb(0 0 0 / 0.10)',
+                        borderWidth: info.ringerHex ? '3px' : '1px',
+                      }}
                   />
+
                   <span className="text-[10px] text-slate-400 leading-none">{yearStr}</span>
                 </motion.div>
               )

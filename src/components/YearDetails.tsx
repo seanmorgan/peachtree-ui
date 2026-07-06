@@ -73,9 +73,12 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
           {/* Year badge + condition */}
           <div className="flex items-center gap-4 flex-wrap">
             <span
-                title={`${record.year} shirt: ${SHIRT_COLORS[record.year].name}`}
-                className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-300/60"
-                style={{ backgroundColor: SHIRT_COLORS[record.year].hex }}
+                className="inline-block h-4 w-4 rounded-full"
+                style={{
+                  backgroundColor: SHIRT_COLORS[record.year].hex,
+                  borderColor: SHIRT_COLORS[record.year].ringerHex ?? 'rgb(0 0 0 / 0.10)',
+                  borderWidth: SHIRT_COLORS[record.year].ringerHex ? '3px' : '1px',
+                }}
             />
             <span className="text-3xl font-bold text-slate-900">{getRecordLabel(record)}</span>
             <StressBadge score={record.runnerStressScore} size="lg" />

@@ -183,11 +183,16 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                   {/* Shirt color swatch */}
                   <td className="px-4 py-2.5 text-center">
                     {SHIRT_COLORS[row.year] ? (
-                      <span
-                        title={`${row.year} shirt: ${SHIRT_COLORS[row.year].name}`}
-                        className="inline-block h-4 w-4 rounded-full ring-1 ring-slate-300/60"
-                        style={{ backgroundColor: SHIRT_COLORS[row.year].hex }}
-                      />
+                        <span
+                            title={`${row.year} shirt: ${SHIRT_COLORS[row.year].name}`}
+                            className="inline-block h-4 w-4 rounded-full"
+                            style={{
+                              backgroundColor: SHIRT_COLORS[row.year].hex,
+                              borderColor: SHIRT_COLORS[row.year].ringerHex ?? 'rgb(148 163 184 / 0.6)',
+                              borderWidth: SHIRT_COLORS[row.year].ringerHex ? '2px' : '1px',
+                              borderStyle: 'solid',
+                            }}
+                        />
                     ) : (
                       <span className="text-slate-300 text-xs">—</span>
                     )}
