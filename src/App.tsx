@@ -162,7 +162,7 @@ export default function App() {
                 className="text-sm mt-1"
                 style={{ color: SUBTITLE_COLOR, transition: 'color 800ms ease-in-out' }}
               >
-                {getUniqueYearCount(data)} years of race-morning weather data{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''} · Closest observation to 7:00 AM start
+                {getUniqueYearCount(data)} years of race-morning weather data{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''} · Closest observation to race starting times
               </p>
             </div>
 
