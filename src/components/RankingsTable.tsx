@@ -24,15 +24,16 @@ function SortIcon({ field, sortField, sortDir }: { field: SortField; sortField: 
 }
 
 const COLS: Array<{ field: SortField; label: string; align?: string }> = [
-  { field: 'rank', label: '#' },
-  { field: 'year', label: 'Year' },
-  { field: 'shirt', label: 'Shirt', align: 'center' },
-  { field: 'tempF', label: 'Temp' },
-  { field: 'dewPointF', label: 'Dew Pt' },
-  { field: 'humidityPct', label: 'Humidity' },
-  { field: 'runnerStressScore', label: 'Stress' },
-  { field: 'windSpeedMph', label: 'Wind' },
-  { field: 'condition', label: 'Condition', align: 'left' },
+  { field: 'rank',             label: '#' },
+  { field: 'year',             label: 'Year' },
+  { field: 'shirt',            label: 'Shirt', align: 'center' },
+  { field: 'tempF',            label: 'Temp' },
+  { field: 'dewPointF',        label: 'Dew Pt' },
+  { field: 'humidityPct',      label: 'Humidity' },
+  { field: 'runnerStressScore',label: 'Stress' },
+  { field: 'windSpeedMph',     label: 'Wind' },
+  { field: 'condition',        label: 'Condition', align: 'left' },
+  { field: 'targetTime',       label: 'Start Time', align: 'left' },
 ]
 
 export function RankingsTable({ data, selectedId, onSelectId, forecast, showForecast }: Props) {
@@ -79,7 +80,7 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
       setSortDir(d => (d === 'asc' ? 'desc' : 'asc'))
     } else {
       setSortField(field)
-      setSortDir(field === 'condition' || field === 'year' || field === 'shirt' ? 'asc' : 'desc')
+      setSortDir(field === 'condition' || field === 'year' || field === 'shirt' || field === 'targetTime' ? 'asc' : 'desc')
     }
   }
 
@@ -115,7 +116,7 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                   key={col.field}
                   onClick={() => handleSort(col.field)}
                   className={cn(
-                    'cursor-pointer select-none whitespace-nowrap px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-400',
+                    'cursor-pointer select-none whitespace-nowrap px-4 py-3 align-middle text-xs font-semibold uppercase tracking-wider text-slate-400',
                     col.align === 'left' ? 'text-left' : col.align === 'center' ? 'text-center' : 'text-right',
                     'hover:text-slate-600 transition-colors',
                   )}
@@ -152,6 +153,7 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                 <td className="px-4 py-2.5 text-right tabular-nums text-slate-500 text-xs">
                   {forecast.windSpeedMph === 0 ? 'Calm' : `${forecast.windSpeedMph} mph`}
                 </td>
+                <td className="px-4 py-2.5 text-left text-slate-400">—</td>
                 <td className="px-4 py-2.5 text-left text-slate-400">—</td>
               </tr>
             )}
@@ -210,6 +212,9 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                   </td>
                   <td className="px-4 py-2.5 text-left text-slate-500 text-xs">
                     {getConditionEmoji(row.condition)} {row.condition}
+                  </td>
+                  <td className="px-4 py-2.5 text-left tabular-nums text-slate-500 text-xs">
+                    {row.targetTime || '—'}
                   </td>
                 </tr>
               )

@@ -81,6 +81,7 @@ export type SortField =
   | 'runnerStressScore'
   | 'windSpeedMph'
   | 'condition'
+  | 'targetTime'
 
 export type SortDir = 'asc' | 'desc'
 

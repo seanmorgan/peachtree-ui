@@ -126,7 +126,7 @@ export function MainChart({
             Historical Trends
           </h2>
           <p className="text-xs text-slate-400">
-            7:00 AM race start{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
+            {yearRange ? `${yearRange.min}–${yearRange.max}` : ''}
           </p>
         </div>
         <ChartControls
