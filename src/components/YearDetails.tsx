@@ -40,7 +40,7 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.25 }}
-      className="rounded-2xl border border-slate-200 bg-white shadow-sm h-full flex flex-col"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm h-[520px] lg:h-full flex flex-col"
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4">

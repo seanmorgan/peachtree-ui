@@ -12,13 +12,14 @@ import { YearDetails } from './components/YearDetails'
 import { ForecastPanel } from './components/ForecastPanel'
 import { ShirtColorPieChart } from './components/ShirtColorPieChart'
 import { InfoModal } from './components/InfoModal'
+import {getUniqueYearCount} from "./utils/calculations.ts";
 
 const NAV_ITEMS = [
-  { id: 'section-explorer', label: 'Highlights'           },
-  { id: 'section-history',  label: 'Historical Trends'    },
-  { id: 'section-rankings', label: 'Historical Rankings'  },
-  { id: 'section-whatif',   label: 'What-If Simulator'    },
-  { id: 'section-shirts',   label: 'Shirt Color Archive'  },
+  { id: 'section-explorer', label: 'Highlights',          shortLabel: 'Highlights'  },
+  { id: 'section-history',  label: 'Historical Trends',   shortLabel: 'Trends'      },
+  { id: 'section-rankings', label: 'Historical Rankings', shortLabel: 'Rankings'    },
+  { id: 'section-whatif',   label: 'What-If Simulator',   shortLabel: 'What-If'     },
+  { id: 'section-shirts',   label: 'Shirt Color Archive', shortLabel: 'Shirts'      },
 ] as const
 
 function scrollTo(id: string) {
@@ -97,27 +98,28 @@ export default function App() {
       {/* ── Header / Nav ── */}
       <header className="header-gradient border-b border-peachtree-700/40 sticky top-0 z-40 shadow-lg shadow-peachtree-900/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-12 items-center justify-between gap-4">
+          <div className="flex h-12 items-center justify-between gap-2">
 
             {/* Left: nav links */}
-            <nav className="flex items-center gap-1 sm:gap-2" aria-label="Page sections">
-              {NAV_ITEMS.map(({ id, label }) => {
+            <nav className="flex items-center gap-0.5 sm:gap-1 min-w-0 overflow-x-auto" aria-label="Page sections">
+              {NAV_ITEMS.map(({ id, label, shortLabel }) => {
                 const isActive = activeSection === id
                 return (
                   <button
                     key={id}
                     onClick={() => scrollTo(id)}
                     className={[
-                      'relative px-2.5 py-1 text-sm font-medium rounded transition-colors duration-150',
+                      'relative flex-shrink-0 px-2 sm:px-2.5 py-1 text-xs sm:text-sm font-medium rounded transition-colors duration-150 whitespace-nowrap',
                       isActive
                         ? 'text-white'
                         : 'text-peachtree-200 hover:text-white',
                     ].join(' ')}
                   >
-                    {label}
+                    <span className="sm:hidden">{shortLabel}</span>
+                    <span className="hidden sm:inline">{label}</span>
                     {/* active underline indicator */}
                     {isActive && (
-                      <span className="absolute bottom-0 left-2.5 right-2.5 h-0.5 rounded-full bg-white" />
+                      <span className="absolute bottom-0 left-2 right-2 sm:left-2.5 sm:right-2.5 h-0.5 rounded-full bg-white" />
                     )}
                   </button>
                 )
@@ -125,21 +127,21 @@ export default function App() {
             </nav>
 
             {/* Right: attribution + info */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <span className="hidden sm:inline text-xs text-peachtree-300">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              <span className="hidden lg:inline text-xs text-peachtree-300">
                 Created by Sean Morgan
               </span>
               <a
                 href="https://github.com/seanmorgan/peachtree-ui"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-peachtree-200 hover:text-white transition-colors"
+                className="hidden sm:inline text-xs text-peachtree-200 hover:text-white transition-colors"
               >
                 GitHub
               </a>
               <a
                 href="mailto:websean.com@gmail.com"
-                className="text-xs text-peachtree-200 hover:text-white transition-colors"
+                className="hidden sm:inline text-xs text-peachtree-200 hover:text-white transition-colors"
               >
                 Feedback
               </a>
@@ -198,7 +200,7 @@ export default function App() {
                   className="text-sm mt-1"
                   style={{ color: SUBTITLE_COLOR, transition: 'color 800ms ease-in-out' }}
                 >
-                  The complete historical record of race-start weather for every Peachtree Road Race {yearRange ? `from ${yearRange.min}–${yearRange.max}` : ''}.
+                  {getUniqueYearCount(data)} years of race-start weather. Every finisher shirt color. Historical rankings, interactive tools, and race-day insights—all in one place.
                 </p>
               </div>
               <SummaryCards data={data} selectedId={selectedId} onSelectId={handleSelectId} />

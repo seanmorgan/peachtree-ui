@@ -140,7 +140,7 @@ export function ScatterPlot({ data, selectedId, onSelectId, forecast, showForeca
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="rounded-2xl border border-slate-200 bg-white shadow-sm min-h-[520px] flex flex-col"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm h-[520px] lg:h-full flex flex-col"
     >
       <div className="border-b border-slate-100 px-5 py-4">
         <h2 className="text-base font-semibold text-slate-900">
