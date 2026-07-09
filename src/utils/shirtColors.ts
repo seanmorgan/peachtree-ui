@@ -60,7 +60,7 @@ export const SHIRT_COLORS: Record<
   2020: { hex: '#D64545', name: 'Red', colorFamily: 'Red', displayHueOrder: 100 },
   2021: { hex: '#5C8EF5', name: 'Bright Cornflower Blue', colorFamily: 'Blue', displayHueOrder: 725 },
   2022: { hex: '#56B7D8', name: 'Aqua Blue', colorFamily: 'Blue', displayHueOrder: 600 },
-  2023: { hex: '#F2994A', name: 'Peach Orange', colorFamily: 'Orange', displayHueOrder: 250 },
+  2023: { hex: '#F79A87', name: 'Peach Coral', colorFamily: 'Peach', displayHueOrder: 250 },
   2024: { hex: '#2458B5', name: 'Deep Sapphire Blue', colorFamily: 'Blue', displayHueOrder: 800 },
   2025: { hex: '#D64545', name: 'Red', colorFamily: 'Red', displayHueOrder: 100 },
   2026: { hex: '#F2E61C', name: 'Sunflower Yellow', colorFamily: 'Yellow', displayHueOrder: 350 },

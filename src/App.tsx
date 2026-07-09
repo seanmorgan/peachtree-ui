@@ -1,10 +1,9 @@
 import { useState, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { type MetricKey, type ForecastData } from './types'
-import { getUniqueYearCount } from './utils/calculations'
 import { SHIRT_COLORS } from './utils/shirtColors'
 import { useWeatherData } from './hooks/useWeatherData'
+import { useActiveSection } from './hooks/useActiveSection'
 import { SummaryCards } from './components/SummaryCards'
 import { MainChart } from './components/MainChart'
 import { RankingsTable } from './components/RankingsTable'
@@ -13,6 +12,19 @@ import { YearDetails } from './components/YearDetails'
 import { ForecastPanel } from './components/ForecastPanel'
 import { ShirtColorPieChart } from './components/ShirtColorPieChart'
 import { InfoModal } from './components/InfoModal'
+
+const NAV_ITEMS = [
+  { id: 'section-explorer', label: 'Highlights'           },
+  { id: 'section-history',  label: 'Historical Trends'    },
+  { id: 'section-rankings', label: 'Historical Rankings'  },
+  { id: 'section-whatif',   label: 'What-If Simulator'    },
+  { id: 'section-shirts',   label: 'Shirt Color Archive'  },
+] as const
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 /** Returns true when hex color has enough luminance for dark text to be readable on top. */
 function isLightColor(hex: string): boolean {
@@ -23,6 +35,7 @@ function isLightColor(hex: string): boolean {
 }
 
 const DEFAULT_BG = '#f8fafc' // Tailwind slate-50
+const SECTION_IDS = NAV_ITEMS.map(n => n.id)
 
 export default function App() {
   const { data, loading, error } = useWeatherData('/peachtree-start-conditions.csv')
@@ -32,6 +45,8 @@ export default function App() {
   const [forecast, setForecast] = useState<ForecastData | null>(null)
   const [showForecast, setShowForecast] = useState(true)
   const [showInfo, setShowInfo] = useState(false)
+
+  const activeSection = useActiveSection(SECTION_IDS)
 
   const toggleMetric = useCallback((key: MetricKey) => {
     setActiveMetrics(prev =>
@@ -43,6 +58,14 @@ export default function App() {
 
   const handleSelectId = useCallback((id: string) => {
     setSelectedId(prev => (prev === id ? null : id))
+    // Clear any active forecast when a year is selected so lines don't overlap
+    setForecast(null)
+  }, [])
+
+  const handleForecastChange = useCallback((f: ForecastData | null) => {
+    setForecast(f)
+    // Deselect any chosen year so only the forecast lines appear on the chart
+    if (f !== null) setSelectedId(null)
   }, [])
 
   const yearRange = useMemo(() => (
@@ -71,52 +94,64 @@ export default function App() {
     >
       <InfoModal open={showInfo} onClose={() => setShowInfo(false)} yearRange={yearRange ?? undefined} />
 
-      {/* ── Header ── */}
+      {/* ── Header / Nav ── */}
       <header className="header-gradient border-b border-peachtree-700/40 sticky top-0 z-40 shadow-lg shadow-peachtree-900/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex min-h-16 sm:h-20 items-center justify-between gap-3 py-3 sm:py-0">
-            {/* Branding */}
-            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-              <span className="text-2xl sm:text-4xl leading-none select-none flex-shrink-0">🏃</span>
-              <div className="min-w-0">
-                <h1 className="text-sm sm:text-xl font-extrabold text-white tracking-tight leading-snug">
-                  Peachtree Road Race Weather Archive
-                </h1>
-                {/* Full subtitle on sm+ */}
-                <p className="hidden sm:block text-sm font-semibold text-peachtree-200 mt-0.5">
-                  Race-Start Weather History &nbsp;·&nbsp; Atlanta, GA &nbsp;·&nbsp; July 4th{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
-                </p>
-                {/* Condensed subtitle on mobile */}
-                <p className="block sm:hidden text-[11px] font-medium text-peachtree-200 mt-0.5">
-                  Atlanta, GA · July 4th{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
-                </p>
-              </div>
-            </div>
+          <div className="flex h-12 items-center justify-between gap-4">
 
-            {/* Right side */}
+            {/* Left: nav links */}
+            <nav className="flex items-center gap-1 sm:gap-2" aria-label="Page sections">
+              {NAV_ITEMS.map(({ id, label }) => {
+                const isActive = activeSection === id
+                return (
+                  <button
+                    key={id}
+                    onClick={() => scrollTo(id)}
+                    className={[
+                      'relative px-2.5 py-1 text-sm font-medium rounded transition-colors duration-150',
+                      isActive
+                        ? 'text-white'
+                        : 'text-peachtree-200 hover:text-white',
+                    ].join(' ')}
+                  >
+                    {label}
+                    {/* active underline indicator */}
+                    {isActive && (
+                      <span className="absolute bottom-0 left-2.5 right-2.5 h-0.5 rounded-full bg-white" />
+                    )}
+                  </button>
+                )
+              })}
+            </nav>
+
+            {/* Right: attribution + info */}
             <div className="flex items-center gap-3 flex-shrink-0">
-              {/* Category legend – hidden on small screens */}
-              <div className="hidden lg:flex items-center gap-3">
-                <p className="text-sm font-semibold text-peachtree-200 mt-0.5">
-                  Created by Sean Morgan • {' '}
-                  <a href="https://github.com/seanmorgan/peachtree-ui" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
-                    GitHub
-                  </a>{' '} • {' '}
-                  <a href="mailto:websean.com@gmail.com" target="_blank" rel="noopener noreferrer" className="text-peachtree-400 hover:text-peachtree-500 transition-colors">
-                    Feedback
-                  </a>{' '}
-                </p>
-              </div>
-
-              {/* Info button */}
+              <span className="hidden sm:inline text-xs text-peachtree-300">
+                Created by Sean Morgan
+              </span>
+              <a
+                href="https://github.com/seanmorgan/peachtree-ui"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-peachtree-200 hover:text-white transition-colors"
+              >
+                GitHub
+              </a>
+              <a
+                href="mailto:websean.com@gmail.com"
+                className="text-xs text-peachtree-200 hover:text-white transition-colors"
+              >
+                Feedback
+              </a>
               <button
                 onClick={() => setShowInfo(true)}
-                className="rounded-lg border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
+                className="text-xs text-peachtree-200 hover:text-white transition-colors"
                 aria-label="About this dashboard"
               >
-                <InformationCircleIcon className="h-4 w-4" />
+                Info
               </button>
             </div>
+
           </div>
         </div>
       </header>
@@ -150,68 +185,75 @@ export default function App() {
             transition={{ duration: 0.4 }}
             className="space-y-8"
           >
-            {/* Page title */}
-            <div>
-              <h2
-                className="text-2xl font-bold"
-                style={{ color: TITLE_COLOR, transition: 'color 800ms ease-in-out' }}
-              >
-                Race Start Conditions
-              </h2>
-              <p
-                className="text-sm mt-1"
-                style={{ color: SUBTITLE_COLOR, transition: 'color 800ms ease-in-out' }}
-              >
-                {getUniqueYearCount(data)} years of race-morning weather data{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''} · Closest observation to race starting times
-              </p>
-            </div>
+            {/* ── Section: Explorer (Summary Cards + title) ── */}
+            <section id="section-explorer" className="scroll-mt-14">
+              <div className="mb-6">
+                <h2
+                  className="text-2xl font-bold"
+                  style={{ color: TITLE_COLOR, transition: 'color 800ms ease-in-out' }}
+                >
+                  Peachtree Road Race Weather Archive
+                </h2>
+                <p
+                  className="text-sm mt-1"
+                  style={{ color: SUBTITLE_COLOR, transition: 'color 800ms ease-in-out' }}
+                >
+                  The complete historical record of race-start weather for every Peachtree Road Race {yearRange ? `from ${yearRange.min}–${yearRange.max}` : ''}.
+                </p>
+              </div>
+              <SummaryCards data={data} selectedId={selectedId} onSelectId={handleSelectId} />
+            </section>
 
-            {/* Summary Cards */}
-            <SummaryCards data={data} selectedId={selectedId} onSelectId={handleSelectId} />
+            {/* ── Section: History (Main Chart + Scatter + Year Details) ── */}
+            <section id="section-history" className="scroll-mt-14 space-y-6">
+              <MainChart
+                data={data}
+                activeMetrics={activeMetrics}
+                onToggleMetric={toggleMetric}
+                selectedId={selectedId}
+                onSelectId={handleSelectId}
+                forecast={forecast}
+                showForecast={showForecast}
+              />
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:h-[580px]">
+                <ScatterPlot
+                  data={data}
+                  selectedId={selectedId}
+                  onSelectId={handleSelectId}
+                  forecast={forecast}
+                  showForecast={showForecast}
+                />
+                <YearDetails data={data} selectedId={selectedId} onSelectId={handleSelectId} />
+              </div>
+            </section>
 
-            {/* Main Chart */}
-            <MainChart
-              data={data}
-              activeMetrics={activeMetrics}
-              onToggleMetric={toggleMetric}
-              selectedId={selectedId}
-              onSelectId={handleSelectId}
-              forecast={forecast}
-              showForecast={showForecast}
-            />
-
-            {/* Rankings Table */}
-            <RankingsTable
-              data={data}
-              selectedId={selectedId}
-              onSelectId={handleSelectId}
-              forecast={forecast}
-              showForecast={showForecast}
-            />
-
-            {/* Bottom two-column section */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <ScatterPlot
+            {/* ── Section: Rankings ── */}
+            <section id="section-rankings" className="scroll-mt-14">
+              <RankingsTable
                 data={data}
                 selectedId={selectedId}
                 onSelectId={handleSelectId}
                 forecast={forecast}
                 showForecast={showForecast}
               />
-              <YearDetails data={data} selectedId={selectedId} onSelectId={handleSelectId} />
-            </div>
+            </section>
 
-            {/* Forecast panel */}
-            <ForecastPanel
-              data={data}
-              forecast={forecast}
-              showForecast={showForecast}
-              onForecastChange={setForecast}
-              onToggleShowForecast={() => setShowForecast(p => !p)}
-            />
+            {/* ── Section: What-If Simulator ── */}
+            <section id="section-whatif" className="scroll-mt-14">
+              <ForecastPanel
+                data={data}
+                forecast={forecast}
+                showForecast={showForecast}
+                onForecastChange={handleForecastChange}
+                onToggleShowForecast={() => setShowForecast(p => !p)}
+              />
+            </section>
 
-            {/* Shirt color distribution */}
-            <ShirtColorPieChart />
+            {/* ── Section: Shirts ── */}
+            <section id="section-shirts" className="scroll-mt-14">
+              <ShirtColorPieChart />
+            </section>
+
 
             {/* Footer */}
             <footer

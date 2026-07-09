@@ -40,7 +40,7 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.25 }}
-      className="rounded-2xl border border-slate-200 bg-white shadow-sm"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm h-full flex flex-col"
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4">
@@ -63,13 +63,13 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
       </div>
 
       {!record ? (
-        <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+        <div className="flex flex-1 flex-col items-center justify-center py-16 text-slate-400">
           <span className="text-4xl mb-3">🏃</span>
           <p className="text-sm font-medium">Select a year to see details</p>
           <p className="text-xs mt-1">Click any chart point, table row, or use the dropdown above</p>
         </div>
       ) : (
-        <div className="p-5 space-y-5">
+        <div className="flex-1 overflow-y-auto p-5 space-y-5">
           {/* Year badge + condition */}
           <div className="flex items-center gap-4 flex-wrap">
             {SHIRT_COLORS[record.year] ? (

@@ -123,7 +123,7 @@ export function MainChart({
       <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-base font-semibold text-slate-900">
-            Historical Conditions
+            Historical Trends
           </h2>
           <p className="text-xs text-slate-400">
             7:00 AM race start{yearRange ? ` · ${yearRange.min}–${yearRange.max}` : ''}
@@ -224,7 +224,7 @@ export function MainChart({
               />
             )}
 
-            {/* Forecast reference lines */}
+            {/* Forecast reference lines — one per active metric, coloured to match */}
             {forecast && showForecast &&
               activeMetrics.map(k => {
                 const val = forecast[k as keyof ForecastData]
@@ -233,14 +233,14 @@ export function MainChart({
                   <ReferenceLine
                     key={`forecast-${k}`}
                     y={val}
-                    stroke="#f59e0b"
+                    stroke={METRIC_MAP[k].color}
                     strokeWidth={2}
                     strokeDasharray="6 3"
                     label={{
-                      value: `Forecast ${val.toFixed(1)}${METRIC_MAP[k].unit}`,
+                      value: `📍 ${val.toFixed(1)}${METRIC_MAP[k].unit}`,
                       position: 'right',
                       fontSize: 10,
-                      fill: '#f59e0b',
+                      fill: METRIC_MAP[k].color,
                     }}
                   />
                 )

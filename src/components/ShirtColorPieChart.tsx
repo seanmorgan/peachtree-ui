@@ -172,7 +172,7 @@ export function ShirtColorPieChart() {
       {/* Header */}
       <div className="border-b border-slate-100 px-5 py-4">
         <h2 className="text-base font-semibold text-slate-900">
-          👕 Finisher T-Shirt Color Distribution
+          👕 Shirt Color Archive
         </h2>
         <p className="text-xs text-slate-400 mt-0.5">
           Color-family breakdown across all 56 race years (there was no finisher shirt in 1970!).
