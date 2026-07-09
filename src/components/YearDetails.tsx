@@ -134,8 +134,8 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
                 <p className="font-medium text-slate-700">{record.time}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">Pressure</p>
-                <p className="font-medium text-slate-700">{record.pressureIn} in</p>
+                <p className="text-xs text-slate-400">Start Time</p>
+                <p className="font-medium text-slate-700">{record.targetTime || '—'}</p>
               </div>
               <div>
                 <p className="text-xs text-slate-400">Precip</p>

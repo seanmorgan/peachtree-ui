@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { XMarkIcon, CalculatorIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, CalculatorIcon, HeartIcon } from '@heroicons/react/24/outline'
 
 interface Props {
   open: boolean
@@ -63,7 +63,24 @@ export function InfoModal({ open, onClose }: Props) {
 
               {/* Body — scrollable */}
               <div className="flex-1 overflow-y-auto overscroll-contain divide-y divide-slate-100 px-5 sm:px-6">
-                {/* Section 3 – Stress Score */}
+                {/* Section 1 – About */}
+                <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
+                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                    <HeartIcon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-900 mb-1">
+                      Behind the Website — A Passion for Peachtree
+                    </h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">
+                      The Peachtree Road Race runs deep for Sean Morgan, an Atlanta runner who's been connected to the race since the mid-1990s and has participated nearly every year since 2008. His grandfather ran Peachtree throughout the 1970s and 1980s, and his dad completed his 47th Peachtree in 2026.
+
+                      Sean created the Peachtree Road Race Weather Archive to build a complete, accurate historical record of the race—from verified start times and weather conditions to finisher shirt colors and other historical details. Much of this information was scattered, difficult to verify, or simply unavailable online. By combining historical weather observations, archival research, published race records, and original data analysis, the archive aims to provide a reliable reference for runners, historians, and anyone curious about the history of the world's largest 10K.
+
+                    </p>
+                  </div>
+                </div>
+                {/* Section 2 – Stress Score */}
                 <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
                   <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
                     <CalculatorIcon className="h-5 w-5" />
