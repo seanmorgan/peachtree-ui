@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { XMarkIcon, ClockIcon, CalendarDaysIcon, CalculatorIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, CalculatorIcon } from '@heroicons/react/24/outline'
 
 interface Props {
   open: boolean
@@ -7,7 +7,7 @@ interface Props {
   yearRange?: { min: number; max: number }
 }
 
-export function InfoModal({ open, onClose, yearRange }: Props) {
+export function InfoModal({ open, onClose }: Props) {
   return (
     <AnimatePresence>
       {open && (
@@ -63,50 +63,6 @@ export function InfoModal({ open, onClose, yearRange }: Props) {
 
               {/* Body — scrollable */}
               <div className="flex-1 overflow-y-auto overscroll-contain divide-y divide-slate-100 px-5 sm:px-6">
-
-                {/* Section 1 – Race start time */}
-                <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
-                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-peachtree-50 text-peachtree-600">
-                    <ClockIcon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-900 mb-1">
-                      Why 7:00 AM?
-                    </h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">
-                      The Peachtree Road Race has started at different times throughout its history — as late as{' '}
-                      <span className="font-medium text-slate-700">10:00 AM in 1970</span>.
-                      Over the years, the start time was moved progressively earlier to beat the heat.
-                    </p>
-                    <p className="mt-2 text-sm text-slate-500 leading-relaxed">
-                      To enable fair year-over-year comparison, this dashboard uses the weather observation{' '}
-                      <span className="font-medium text-slate-700">closest to 7:00 AM</span>{' '}
-                      for every year, regardless of the actual start time that year.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Section 2 – Data coverage */}
-                <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
-                  <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-navy-50 text-navy-600">
-                    <CalendarDaysIcon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-900 mb-1">
-                      Data starts in {yearRange?.min ?? 1982}
-                    </h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">
-                      The Peachtree Road Race began on{' '}
-                      <span className="font-medium text-slate-700">July 4, 1970</span>,
-                      but granular hourly weather observations at Fulton County Airport (KFTY) are not
-                      reliably available before {yearRange?.min ?? 1982}. This dashboard therefore covers{' '}
-                      <span className="font-medium text-slate-700">
-                        {yearRange ? `${yearRange.min}–${yearRange.max}` : '1982–2025'}.
-                      </span>{' '}
-                    </p>
-                  </div>
-                </div>
-
                 {/* Section 3 – Stress Score */}
                 <div className="py-4 sm:py-5 flex gap-3 sm:gap-4">
                   <div className="mt-0.5 flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">

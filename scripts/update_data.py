@@ -3,43 +3,104 @@
 Scrape specified Peachtree Road Race weather year(s) from Weather Underground
 and update/create records in peachtree-start-conditions.csv.
 
+Station logic:
+  - KATL for years before 1982
+  - KFTY for 1982 and beyond
+
 Examples:
   python3 update_peachtree_start_conditions.py --year 2025
-
-  python3 update_peachtree_start_conditions.py --year 2021
-
-  python3 update_peachtree_start_conditions.py --start-year 1982 --end-year 2025
-
-  python3 update_peachtree_start_conditions.py --year 2026 \
-    --csv peachtree-start-conditions.csv
-
-Install:
-  python -m pip install playwright pandas
-  python -m playwright install chromium
+  python3 update_peachtree_start_conditions.py --start-year 1970 --end-year 2025
 """
 
 import argparse
 import re
 import time
-from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 
-STATION = "KFTY"
 BASE_URL = "https://www.wunderground.com/history/daily/us/ga/atlanta/{station}/date/{date}"
 
 DEFAULT_CSV = "public/peachtree-start-conditions.csv"
-DEFAULT_TARGET_TIME = "7:00 AM"
+DEFAULT_TARGET_TIME = "6:50 AM"
 
 PAGE_WAIT_SECONDS = 4
 BETWEEN_REQUESTS_SECONDS = 2
 
+
 RACE_DATES_BY_YEAR = {
     2021: ["2021-07-03", "2021-07-04"],
 }
+
+
+START_TIMES_BY_YEAR = {
+    1970: "9:30 AM",
+    1971: "9:00 AM",
+    1972: "9:00 AM",
+    1973: "9:00 AM",
+    1974: "9:00 AM",
+    1975: "9:00 AM",
+    1976: "9:00 AM",
+    1977: "9:00 AM",
+    1978: "7:00 AM",
+    1979: "8:00 AM",
+    1980: "8:00 AM",
+    1981: "8:00 AM",
+    1982: "7:30 AM",
+    1983: "8:00 AM",
+    1984: "8:00 AM",
+    1985: "8:00 AM",
+    1986: "8:00 AM",
+    1987: "8:00 AM",
+    1988: "8:00 AM",
+    1989: "8:00 AM",
+    1990: "8:00 AM",
+    1991: "8:00 AM",
+    1992: "8:00 AM",
+    1993: "7:30 AM",
+    1994: "7:30 AM",
+    1995: "7:30 AM",
+    1996: "7:30 AM",
+    1997: "7:30 AM",
+    1998: "7:30 AM",
+    1999: "7:30 AM",
+    2000: "7:30 AM",
+    2001: "7:30 AM",
+    2002: "7:30 AM",
+    2003: "7:30 AM",    # Latest year confirmed by published books
+    2004: "7:30 AM",
+    2005: "7:30 AM",
+    2006: "7:30 AM",
+    2007: "7:30 AM",
+    2008: "7:30 AM",
+    2009: "7:30 AM",    # Verified via Garmin Connect
+    2010: "7:30 AM",
+    2011: "7:30 AM",
+    2012: "7:30 AM",
+    2013: "7:30 AM",
+    2014: "7:30 AM",    # Strava data verifies all later years (need to verify '10-'13 but almost certainly 7:30)
+    2015: "7:30 AM",
+    2016: "7:30 AM",
+    2017: "7:30 AM",
+    2018: "7:00 AM",    # Shift from 7:30 to 7:00 AM
+    2019: "7:00 AM",
+    2021: "6:30 AM",
+    2022: "7:00 AM",
+    2023: "7:00 AM",
+    2024: "7:00 AM",
+    2025: "6:50 AM",    # Shift from 7:00 to 6:50 AM
+    2026: "6:50 AM",
+}
+
+
+START_TIMES_BY_DATE = {
+    # Use this for split or unusual race years.
+    # "2021-07-03": "7:00 AM",
+    # "2021-07-04": "7:00 AM",
+}
+
 
 EXPECTED_COLUMNS = [
     "Time",
@@ -53,6 +114,7 @@ EXPECTED_COLUMNS = [
     "Precip.",
     "Condition",
 ]
+
 
 OUTPUT_COLUMNS = [
     "year",
@@ -76,19 +138,31 @@ OUTPUT_COLUMNS = [
 ]
 
 
+def station_for_year(year: int) -> str:
+    return "KATL" if year < 1982 else "KFTY"
+
+
 def race_dates_for_year(year: int):
     return RACE_DATES_BY_YEAR.get(year, [f"{year}-07-04"])
 
 
+def start_time_for_race(year: int, race_date: str, fallback_target_time: str):
+    return (
+        START_TIMES_BY_DATE.get(race_date)
+        or START_TIMES_BY_YEAR.get(year)
+        or fallback_target_time
+    )
+
+
 def clean_cell(value: str) -> str:
     value = re.sub(r"\s+", " ", value or "").strip()
-    value = value.replace("\u00a0", " ")
-    return value
+    return value.replace("\u00a0", " ")
 
 
 def parse_number(value):
     if pd.isna(value):
         return None
+
     match = re.search(r"-?\d+(?:\.\d+)?", str(value).replace(",", ""))
     return float(match.group(0)) if match else None
 
@@ -156,8 +230,10 @@ def heat_index_f(temp_f, rh):
 
 
 def scrape_race_date(page, year: int, race_date: str):
-    url = BASE_URL.format(station=STATION, date=race_date)
-    print(f"Scraping {year} / {race_date}: {url}")
+    station = station_for_year(year)
+    url = BASE_URL.format(station=station, date=race_date)
+
+    print(f"Scraping {year} / {race_date} / {station}: {url}")
 
     page.goto(url, wait_until="domcontentloaded", timeout=60000)
     time.sleep(PAGE_WAIT_SECONDS)
@@ -189,6 +265,7 @@ def scrape_race_date(page, year: int, race_date: str):
         rec = dict(zip(EXPECTED_COLUMNS, cells[:10]))
         rec["Year"] = year
         rec["Date"] = race_date
+        rec["Station"] = station
         rec["Source URL"] = url
         records.append(rec)
 
@@ -200,14 +277,9 @@ def scrape_race_date(page, year: int, race_date: str):
     return records
 
 
-def records_to_start_conditions(records, target_time):
+def records_to_start_conditions(records, fallback_target_time):
     if not records:
         return pd.DataFrame(columns=OUTPUT_COLUMNS)
-
-    target_minutes = parse_time_to_minutes(target_time)
-
-    if target_minutes is None:
-        raise ValueError(f"Could not parse target time: {target_time}")
 
     df = pd.DataFrame(records)
 
@@ -216,7 +288,20 @@ def records_to_start_conditions(records, target_time):
     work["date"] = df["Date"].astype(str)
     work["rawTime"] = df["Time"]
     work["minutesAfterMidnight"] = df["Time"].apply(parse_time_to_minutes)
-    work["minutesFromTarget"] = (work["minutesAfterMidnight"] - target_minutes).abs()
+
+    work["targetTimeRaw"] = [
+        start_time_for_race(int(year), str(date), fallback_target_time)
+        for year, date in zip(work["year"], work["date"])
+    ]
+    work["targetMinutes"] = work["targetTimeRaw"].apply(parse_time_to_minutes)
+
+    if work["targetMinutes"].isna().any():
+        bad = work.loc[work["targetMinutes"].isna(), ["year", "date", "targetTimeRaw"]]
+        raise ValueError(f"Could not parse one or more target times:\n{bad}")
+
+    work["minutesFromTarget"] = (
+        work["minutesAfterMidnight"] - work["targetMinutes"]
+    ).abs()
 
     work["tempF"] = df["Temperature"].apply(parse_number)
     work["dewPointF"] = df["Dew Point"].apply(parse_number)
@@ -231,6 +316,7 @@ def records_to_start_conditions(records, target_time):
 
     valid = work[
         work["minutesAfterMidnight"].notna()
+        & work["targetMinutes"].notna()
         & work["tempF"].between(30, 110)
         & work["dewPointF"].between(0, 90)
         & work["humidityPct"].between(1, 100)
@@ -248,13 +334,17 @@ def records_to_start_conditions(records, target_time):
 
     start["subYear"] = ""
     start["time"] = start["minutesAfterMidnight"].apply(minutes_to_hhmm)
-    start["targetTime"] = minutes_to_hhmm(target_minutes)
+    start["targetTime"] = start["targetMinutes"].apply(minutes_to_hhmm)
+
     start["heatIndexF"] = [
         heat_index_f(t, rh) for t, rh in zip(start["tempF"], start["humidityPct"])
     ]
+
     wind_credit = start["windSpeedMph"].fillna(0).astype(float).clip(upper=10) * 0.5
     start["runnerStressScore"] = (
-        start["tempF"].astype(float) + start["dewPointF"].astype(float) * 1.5 - wind_credit
+        start["tempF"].astype(float)
+        + start["dewPointF"].astype(float) * 1.5
+        - wind_credit
     ).round(1)
 
     return start[OUTPUT_COLUMNS]
@@ -300,6 +390,7 @@ def upsert_csv(new_rows: pd.DataFrame, csv_path: Path):
     existing["year"] = existing["year"].astype(int)
     existing["date"] = existing["date"].astype(str)
 
+    new_rows = new_rows.copy()
     new_rows["year"] = new_rows["year"].astype(int)
     new_rows["date"] = new_rows["date"].astype(str)
 
@@ -325,7 +416,7 @@ def parse_args():
     parser.add_argument(
         "--year",
         type=int,
-        help="Scrape a single year, e.g. --year 2025. For 2021, scrapes 7/3 and 7/4.",
+        help="Scrape a single year. For 2021, scrapes 7/3 and 7/4.",
     )
     parser.add_argument(
         "--start-year",
@@ -345,7 +436,10 @@ def parse_args():
     parser.add_argument(
         "--target-time",
         default=DEFAULT_TARGET_TIME,
-        help=f'Race start proxy time. Default: "{DEFAULT_TARGET_TIME}".',
+        help=(
+            f'Fallback race start proxy time when no per-year/per-date value exists. '
+            f'Default: "{DEFAULT_TARGET_TIME}".'
+        ),
     )
 
     return parser.parse_args()
@@ -373,7 +467,9 @@ def main():
         else f"Year to scrape: {years[0]}"
     )
     print(f"CSV: {csv_path}")
-    print(f"Target time: {args.target_time}")
+    print("Station rule: KATL before 1982, KFTY from 1982 onward")
+    print(f"Fallback target time: {args.target_time}")
+    print("Using per-year/per-date start times where configured.")
 
     all_records = []
     failures = []
@@ -393,6 +489,11 @@ def main():
 
         for year in years:
             for race_date in race_dates_for_year(year):
+                station = station_for_year(year)
+                target_time = start_time_for_race(year, race_date, args.target_time)
+
+                print(f"Resolved {race_date}: station={station}, targetTime={target_time}")
+
                 try:
                     records = scrape_race_date(page, year, race_date)
 
@@ -414,7 +515,6 @@ def main():
         browser.close()
 
     new_rows = records_to_start_conditions(all_records, args.target_time)
-
     updated = upsert_csv(new_rows, csv_path)
 
     print(f"\nWrote: {csv_path}")
