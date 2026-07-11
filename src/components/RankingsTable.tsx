@@ -116,7 +116,7 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
                   key={col.field}
                   onClick={() => handleSort(col.field)}
                   className={cn(
-                    'sticky top-12 z-20 bg-white',
+                    'lg:sticky lg:top-12 z-20 bg-white',
                     'cursor-pointer select-none whitespace-nowrap px-4 py-3 align-middle text-xs font-semibold uppercase tracking-wider text-slate-400',
                     col.align === 'left' ? 'text-left' : col.align === 'center' ? 'text-center' : 'text-right',
                     'hover:text-slate-600 transition-colors',

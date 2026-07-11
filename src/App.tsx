@@ -63,16 +63,42 @@ export default function App() {
     setForecast(null)
   }, [])
 
-  // Called from the Rankings table: select the year AND scroll to Year Explorer
+  // Called from the Rankings table and the main chart.
+  // • Selecting a new year  → update state, scroll to Year Explorer (smooth)
+  // • Re-clicking the same row → clear state, compensate for the layout shift
+  //   caused by the Year Explorer collapsing so the rankings table stays put.
   const handleSelectFromTable = useCallback((id: string) => {
-    setSelectedId(prev => (prev === id ? null : id))
+    const isDeselecting = selectedId === id
+
     setForecast(null)
-    // Defer scroll until after state update
-    setTimeout(() => {
-      const el = document.getElementById('section-year-details')
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 0)
-  }, [])
+
+    if (isDeselecting) {
+      // Snapshot the table's current viewport position BEFORE the state update.
+      const anchor = document.getElementById('section-rankings')
+      const before = anchor?.getBoundingClientRect().top ?? 0
+
+      setSelectedId(null)
+
+      // Wait for React to commit + the browser to finish layout, then correct
+      // for any height change in the Year Explorer above the table.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const after = anchor?.getBoundingClientRect().top ?? 0
+          const delta = after - before
+          if (Math.abs(delta) > 0.5) {
+            window.scrollBy({ top: delta, behavior: 'instant' })
+          }
+        })
+      })
+    } else {
+      setSelectedId(id)
+      // Scroll to Year Explorer after React commits the new selection.
+      setTimeout(() => {
+        const el = document.getElementById('section-year-details')
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 0)
+    }
+  }, [selectedId])
 
   const handleForecastChange = useCallback((f: ForecastData | null) => {
     setForecast(f)

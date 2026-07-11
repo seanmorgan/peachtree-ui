@@ -63,7 +63,7 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
       </div>
 
       {!record ? (
-        <div className="flex flex-1 flex-col items-center justify-center py-16 text-slate-400">
+        <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center text-slate-400">
           <span className="text-4xl mb-3">🏃</span>
           <p className="text-sm font-medium">Select a year to see details</p>
           <p className="text-xs mt-1">Click any row in the Historical Rankings, a chart point, or use the dropdown above</p>
