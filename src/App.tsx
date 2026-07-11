@@ -5,21 +5,21 @@ import { SHIRT_COLORS } from './utils/shirtColors'
 import { useWeatherData } from './hooks/useWeatherData'
 import { useActiveSection } from './hooks/useActiveSection'
 import { SummaryCards } from './components/SummaryCards'
-import { MainChart } from './components/MainChart'
 import { RankingsTable } from './components/RankingsTable'
-import { ScatterPlot } from './components/ScatterPlot'
-import { YearDetails } from './components/YearDetails'
 import { ForecastPanel } from './components/ForecastPanel'
 import { ShirtColorPieChart } from './components/ShirtColorPieChart'
 import { InfoModal } from './components/InfoModal'
 import {getUniqueYearCount} from "./utils/calculations.ts";
+import {MainChart} from "./components/MainChart.tsx";
+import {YearDetails} from "./components/YearDetails.tsx";
 
 const NAV_ITEMS = [
-  { id: 'section-explorer', label: 'Highlights',          shortLabel: 'Highlights'  },
-  { id: 'section-history',  label: 'Historical Trends',   shortLabel: 'Trends'      },
-  { id: 'section-rankings', label: 'Historical Rankings', shortLabel: 'Rankings'    },
-  { id: 'section-whatif',   label: 'What-If Simulator',   shortLabel: 'What-If'     },
-  { id: 'section-shirts',   label: 'Shirt Color Archive', shortLabel: 'Shirts'      },
+  { id: 'section-explorer',     label: 'Highlights',          shortLabel: 'Highlights'  },
+  { id: 'section-history',      label: 'Historical Trends',   shortLabel: 'Trends'      },
+  { id: 'section-year-details', label: 'Year Explorer',       shortLabel: 'Explorer'    },
+  { id: 'section-rankings',     label: 'Historical Rankings', shortLabel: 'Rankings'    },
+  { id: 'section-whatif',       label: 'What-If Simulator',   shortLabel: 'What-If'     },
+  { id: 'section-shirts',       label: 'Shirt Color Archive', shortLabel: 'Shirts'      },
 ] as const
 
 function scrollTo(id: string) {
@@ -61,6 +61,17 @@ export default function App() {
     setSelectedId(prev => (prev === id ? null : id))
     // Clear any active forecast when a year is selected so lines don't overlap
     setForecast(null)
+  }, [])
+
+  // Called from the Rankings table: select the year AND scroll to Year Explorer
+  const handleSelectFromTable = useCallback((id: string) => {
+    setSelectedId(prev => (prev === id ? null : id))
+    setForecast(null)
+    // Defer scroll until after state update
+    setTimeout(() => {
+      const el = document.getElementById('section-year-details')
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 0)
   }, [])
 
   const handleForecastChange = useCallback((f: ForecastData | null) => {
@@ -206,27 +217,22 @@ export default function App() {
               <SummaryCards data={data} selectedId={selectedId} onSelectId={handleSelectId} />
             </section>
 
-            {/* ── Section: History (Main Chart + Scatter + Year Details) ── */}
+            {/* ── Section: History (Main Chart) ── */}
             <section id="section-history" className="scroll-mt-14 space-y-6">
               <MainChart
                 data={data}
                 activeMetrics={activeMetrics}
                 onToggleMetric={toggleMetric}
                 selectedId={selectedId}
-                onSelectId={handleSelectId}
+                onSelectId={handleSelectFromTable}
                 forecast={forecast}
                 showForecast={showForecast}
               />
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:h-[580px]">
-                <ScatterPlot
-                  data={data}
-                  selectedId={selectedId}
-                  onSelectId={handleSelectId}
-                  forecast={forecast}
-                  showForecast={showForecast}
-                />
-                <YearDetails data={data} selectedId={selectedId} onSelectId={handleSelectId} />
-              </div>
+            </section>
+
+            {/* ── Section: Year Explorer (full width) ── */}
+            <section id="section-year-details" className="scroll-mt-14">
+              <YearDetails data={data} selectedId={selectedId} onSelectId={handleSelectId} />
             </section>
 
             {/* ── Section: Rankings ── */}
@@ -234,7 +240,7 @@ export default function App() {
               <RankingsTable
                 data={data}
                 selectedId={selectedId}
-                onSelectId={handleSelectId}
+                onSelectId={handleSelectFromTable}
                 forecast={forecast}
                 showForecast={showForecast}
               />

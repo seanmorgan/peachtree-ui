@@ -40,12 +40,12 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.25 }}
-      className="rounded-2xl border border-slate-200 bg-white shadow-sm h-[520px] lg:h-full flex flex-col"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col"
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Year Details</h2>
+          <h2 className="text-base font-semibold text-slate-900">Year Explorer</h2>
           <p className="text-xs text-slate-400">
             Explore any year's conditions & historical rankings
           </p>
@@ -66,35 +66,49 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
         <div className="flex flex-1 flex-col items-center justify-center py-16 text-slate-400">
           <span className="text-4xl mb-3">🏃</span>
           <p className="text-sm font-medium">Select a year to see details</p>
-          <p className="text-xs mt-1">Click any chart point, table row, or use the dropdown above</p>
+          <p className="text-xs mt-1">Click any row in the Historical Rankings, a chart point, or use the dropdown above</p>
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
-          {/* Year badge + condition */}
-          <div className="flex items-center gap-4 flex-wrap">
-            {SHIRT_COLORS[record.year] ? (
-            <span
-                className="inline-block h-4 w-4 rounded-full"
-                style={{
-                  backgroundColor: SHIRT_COLORS[record.year].hex,
-                  borderColor: SHIRT_COLORS[record.year].ringerHex ?? 'rgb(0 0 0 / 0.10)',
-                  borderWidth: SHIRT_COLORS[record.year].ringerHex ? '3px' : '1px',
-                }}
-            />) : <></>}
+          {/* Year heading + attribute row */}
+          <div className="flex flex-col gap-1">
             <span className="text-3xl font-bold text-slate-900">{getRecordLabel(record)}</span>
-            <StressBadge score={record.runnerStressScore} size="lg" />
-            <span className="text-sm text-slate-500">
-              {getConditionEmoji(record.condition)} {record.condition}
-            </span>
-            {record.wind !== 'CALM' && record.windSpeedMph > 0 && (
-              <span className="text-sm text-slate-500">
-                💨 {record.wind} {record.windSpeedMph} mph
-              </span>
+            {record.date && (
+              <span className="text-sm text-slate-400">{record.date}</span>
             )}
+            <div className="flex items-center gap-4 flex-wrap mt-1">
+              {/* Shirt swatch + name — same visual language as the Shirt Color Archive */}
+              {SHIRT_COLORS[record.year] && (() => {
+                const shirt = SHIRT_COLORS[record.year]
+                return (
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-500">
+                    <span
+                      className="inline-block h-4 w-4 rounded-full border shadow-sm flex-shrink-0"
+                      style={{
+                        backgroundColor: shirt.hex,
+                        borderColor: shirt.ringerHex ?? 'rgb(0 0 0 / 0.10)',
+                        borderWidth: shirt.ringerHex ? '3px' : '1px',
+                      }}
+                      title={`${record.year} Finisher Shirt · ${shirt.name}`}
+                    />
+                    {shirt.name} Shirt
+                  </span>
+                )
+              })()}
+              <StressBadge score={record.runnerStressScore} size="lg" />
+              <span className="text-sm text-slate-500">
+                {getConditionEmoji(record.condition)} {record.condition}
+              </span>
+              {record.wind !== 'CALM' && record.windSpeedMph > 0 && (
+                <span className="text-sm text-slate-500">
+                  💨 {record.wind} {record.windSpeedMph} mph
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Main metrics grid */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {METRIC_CONFIGS.map(m => {
               const val = record[m.key] as number
               const rank = rankings[m.key]
@@ -121,23 +135,23 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
 
           {/* Additional details */}
           <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">
               More Details
             </p>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4">
-              <div>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-sm sm:grid-cols-4">
+              <div className="flex flex-col gap-1">
                 <p className="text-xs text-slate-400">Date</p>
                 <p className="font-medium text-slate-700">{record.date}</p>
               </div>
-              <div>
+              <div className="flex flex-col gap-1">
                 <p className="text-xs text-slate-400">Obs. Time</p>
                 <p className="font-medium text-slate-700">{record.time}</p>
               </div>
-              <div>
+              <div className="flex flex-col gap-1">
                 <p className="text-xs text-slate-400">Start Time</p>
                 <p className="font-medium text-slate-700">{record.targetTime || '—'}</p>
               </div>
-              <div>
+              <div className="flex flex-col gap-1">
                 <p className="text-xs text-slate-400">Precip</p>
                 <p className="font-medium text-slate-700">
                   {record.precipIn === 0 ? 'None' : `${record.precipIn} in`}
@@ -154,7 +168,7 @@ export function YearDetails({ data, selectedId, onSelectId }: Props) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs text-peachtree-500 hover:text-peachtree-600 transition-colors"
             >
-              View source data ↗
+              View source weather observations ↗
             </a>
           )}
         </div>

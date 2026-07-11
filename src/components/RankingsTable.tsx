@@ -96,29 +96,32 @@ export function RankingsTable({ data, selectedId, onSelectId, forecast, showFore
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15 }}
-      className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden"
+      className="rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
       <div className="border-b border-slate-100 px-5 py-4">
         <h2 className="text-base font-semibold text-slate-900">
           Historical Rankings
         </h2>
         <p className="text-xs text-slate-400">
-          Click a row to explore that year · Sorted by worst conditions first
+          Click a row to open that year in the Year Explorer above · Sorted by worst conditions first
         </p>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto lg:overflow-visible">
         <table className="w-full min-w-[700px] text-sm">
           <thead>
-            <tr className="border-b border-slate-100">
+            <tr>
               {COLS.map(col => (
                 <th
                   key={col.field}
                   onClick={() => handleSort(col.field)}
                   className={cn(
+                    'sticky top-12 z-20 bg-white',
                     'cursor-pointer select-none whitespace-nowrap px-4 py-3 align-middle text-xs font-semibold uppercase tracking-wider text-slate-400',
                     col.align === 'left' ? 'text-left' : col.align === 'center' ? 'text-center' : 'text-right',
                     'hover:text-slate-600 transition-colors',
+                    // hairline bottom border painted via box-shadow (works reliably on <th>)
+                    'shadow-[0_1px_0_0_#e2e8f0,0_2px_4px_0_rgba(0,0,0,0.04)]',
                   )}
                 >
                   <span className="inline-flex items-center gap-1">
